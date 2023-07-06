@@ -1,4 +1,3 @@
-
 def dtime(n):
     full = (n[-32]+n[-31]+n[-30]+n[-29]+n[-28]+n[-27]+n[-26]+n[-25]+n[-24]+n[-23]+n[-22]+n[-21]+n[-20]+n[-19]+n[-18]+n[-17])
     day = int(full[-8]+full[-7])
@@ -64,13 +63,3 @@ def dtime(n):
         minute = str(minute+"PM")
     year = str(full[-16]+full[-15]+full[-14]+full[-13])
     globals()[mystr] = (day+" "+month+" "+year+" at "+hour+":"+minute)
-
-
-hello = "2022-10-17 02:50:25.085744+00:00"
-print(hello)
-print()
-mystr = "hello"
-dtime(hello)
-print(hello)
-
-
