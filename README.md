@@ -1,1 +1,1 @@
-# The-MoonHack-Project
+# The MoonHack Project
