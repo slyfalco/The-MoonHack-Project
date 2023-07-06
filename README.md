@@ -8,10 +8,10 @@ I used these data libraries: time, datetime, os, gc, pytz, ephem, wmi, geocoder,
 **REQUIREMENTS:**
  
 First party modules: time, datetime, os, gc
-
+*** ***
 Third party modules: pytz, ephem, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo 
-
 ***Note: These either need do be installed in command prompt using pip***
+
 
 SCREENSHOT OF PROJECT OUTPUT:
 
