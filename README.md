@@ -1,19 +1,29 @@
 # The MoonHack Project
 
-I have made an interactable menu for everything that is in ephem in a date word format, this can automatically detect your location and timezone and you can also enter in your own location,
-same for the date and accounts for leap years. You can also save the information to a file.
+## **Introduction:**
 
-I used these data libraries: time, datetime, os, gc, pytz, ephem, wmi, geocoder, timezonefinder, geopy and backports.zoneinfo
+This Python project calculates the time every planet rises and sets in our solar system based on longitude, latitude and timezone.
+Ephem is the module on which this project is based and it performs high-precision astronomy computations.
+It can automatically use geolocation to locate your longitude, latitude and timezone, and you can specify the date. This project also checks if cmd is running.
 *** ***
-**REQUIREMENTS:**
- 
+## **Features:**
+**Completed:**
+- A save function
+- The do-all option
+- Checks if cmd is running
+- Options for twilight types
+
+**In progress:**
+- A version with music and sound effects with automatic file downloads
+
+*** ***
+## **Requirements:**
 First party modules: time, datetime, os, gc
 
 Third party modules: pytz, ephem, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo
 
 ***Note: These need to be installed in the command prompt using pip***
 *** ***
-
 SCREENSHOT OF PROJECT OUTPUT:
 
 ![Capture](https://github.com/slyfalco/The-MoonHack-Project/assets/43293494/c333882e-ff8c-422b-b450-680c24cf1e22)
