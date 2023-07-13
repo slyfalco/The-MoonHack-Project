@@ -14,6 +14,9 @@ It can automatically use geolocation to locate your longitude, latitude and time
 - The do-all option
 - Checks if cmd is running
 - Options for twilight types
+- Options for moon phases
+- An option for manually inputting your location
+- An option for manually inputting a date
 
 **In progress:**
 - A version with music and sound effects with automatic file downloads
