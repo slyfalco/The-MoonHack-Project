@@ -6,7 +6,7 @@ This Python project calculates the time every planet rises and sets in our solar
 Ephem is the module on which this project is based and it performs high-precision astronomy computations.
 It can automatically use geolocation to locate your longitude, latitude and timezone, and you can specify the date. This project also checks if cmd is running.
 
-***Note: It may take some time to load on first launch***
+***Note: It may take some time to load on the first launch***
 *** ***
 ## **Features:**
 **Completed:**
@@ -22,7 +22,7 @@ It can automatically use geolocation to locate your longitude, latitude and time
 ## **Requirements:**
 First-party modules: time, datetime, os, gc
 
-Third-party modules: pytz, ephem, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo
+Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo
 
 ***Note: These need to be installed in the command prompt using pip***
 *** ***
