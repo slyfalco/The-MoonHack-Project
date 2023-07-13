@@ -20,9 +20,9 @@ It can automatically use geolocation to locate your longitude, latitude and time
 
 *** ***
 ## **Requirements:**
-First party modules: time, datetime, os, gc
+First-party modules: time, datetime, os, gc
 
-Third party modules: pytz, ephem, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo
+Third-party modules: pytz, ephem, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo
 
 ***Note: These need to be installed in the command prompt using pip***
 *** ***
