@@ -24,9 +24,9 @@ It can automatically use geolocation to locate your longitude, latitude and time
 
 *** ***
 ## **Requirements:**
-First-party modules: time, datetime, os, gc
+First-party modules: time, datetime, os, gc, winsound
 
-Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound
+Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo
 
 ***Note: These need to be installed in the command prompt using pip***
 *** ***
