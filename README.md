@@ -28,7 +28,7 @@ First-party modules: time, datetime, os, gc, winsound
 
 Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, wget
 
-***Note: These need to be installed in the command prompt using pip***
+***Note: Third-party modules need to be installed in the command prompt using pip***
 *** ***
 SCREENSHOT OF PROJECT OUTPUT:
 
