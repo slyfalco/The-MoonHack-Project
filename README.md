@@ -20,7 +20,8 @@ It can automatically use geolocation to locate your longitude, latitude and time
 - Auto clears variables out of memory
 
 **In progress:**
-- A version with music and sound effects with automatic file downloads
+- Music and sound effects
+- Automatic file downloads
 
 *** ***
 ## **Requirements:**
