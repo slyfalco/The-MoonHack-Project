@@ -18,11 +18,11 @@ It can automatically use geolocation to locate your longitude, latitude and time
 - An option for manually inputting your location
 - An option for manually inputting a date
 - Auto clears variables out of memory
+- Automatic file downloads
 
 **In progress:**
 - Music and sound effects
-- Automatic file downloads
-
+  
 *** ***
 ## **Requirements:**
 First-party modules: time, datetime, os, winsound
