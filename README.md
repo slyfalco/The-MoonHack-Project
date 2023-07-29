@@ -27,9 +27,10 @@ Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backport
 - An option for manually inputting a date
 - Auto clears variables out of memory
 - Automatic file downloads
+- Music and sound effects
 
 **In progress:**
-- Music and sound effects
+- To upload all changes on 30th July 2023
   
 *** ***
 SCREENSHOT OF PROJECT OUTPUT:
