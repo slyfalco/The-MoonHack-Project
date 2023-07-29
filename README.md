@@ -16,6 +16,7 @@ It can automatically use geolocation to locate your longitude, latitude and time
 - Options for twilight types
 - Options for moon phases
 - An option for manually inputting your location
+- An option for automatically finding the location
 - An option for manually inputting a date
 - Auto clears variables out of memory
 - Automatic file downloads
