@@ -8,6 +8,13 @@ It can automatically use geolocation to locate your longitude, latitude, elevati
 
 ***Note: It may take some time to load on the first launch***
 *** ***
+## **Requirements:**
+First-party modules: time, datetime, os, winsound
+
+Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound==1.2.2, wget
+
+***Note: Third-party modules need to be installed in the command prompt using pip***
+*** ***
 ## **Features:**
 **Completed:**
 - A save function
@@ -24,13 +31,6 @@ It can automatically use geolocation to locate your longitude, latitude, elevati
 **In progress:**
 - Music and sound effects
   
-*** ***
-## **Requirements:**
-First-party modules: time, datetime, os, winsound
-
-Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound==1.2.2, wget
-
-***Note: Third-party modules need to be installed in the command prompt using pip***
 *** ***
 SCREENSHOT OF PROJECT OUTPUT:
 
