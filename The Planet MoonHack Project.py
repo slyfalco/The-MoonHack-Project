@@ -6,9 +6,10 @@
 import time
 from datetime import datetime
 import os
+import winsound
 import gc
 
-# Third party Packages
+# Third party Packages    gc for deleting varibles
 import pytz
 import ephem
 import wmi
@@ -16,36 +17,258 @@ import geocoder
 import timezonefinder
 from geopy.point import Point
 from backports.zoneinfo import ZoneInfo
-import tzdata
+from playsound import playsound
+import wget
 
-def clear(): # Checks if Mu is running
-    find = wmi.WMI()
-    for process in find.Win32_Process():
-        if not "pythonw.exe" == process.Name:
-            os.system('cls' if os.name == 'nt' else 'clear')
-        else:
+def clear():
+    global mem
+    try:
+        if mem == 0:
             print(" \n" * 49)
+            return
+        elif mem == 1:
+            os.system('cls' if os.name == 'nt' else 'clear')     # Checks if Mu is running
+            return
+    except Exception:
+        find = wmi.WMI()
+        for process in find.Win32_Process():
+            if "pythonw.exe" == process.Name:  # cmd.exe
+                mem = 1
+                os.system('cls' if os.name == 'nt' else 'clear')
+            else:
+                mem = 0
+                print(" \n" * 49)
+                return
 
-def underline(text): # Underlines text
+def underline(text):  # Underlines text
     print("\u0332".join(text))
 
-def prompt(): # The exit prompt
-    exita = input("Are you sure you want to quit? ")
-    if exita == "yes" or exita == "Yes" or exita == "YES" or exita == "y" or exita == "Y":
-        try:
+def delete(n):
+    try:
+        if n == 0:
+            for k,v in (globals().copy()).items():
+                if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+                    tv = str(type(v))
+                    if not tv == "<class 'module'>":
+                        del globals()[k]
+            return
+        if n == 1:
             print()
-            exit("User quit from menu")
-        except SystemExit:
-            pass
-    elif exita == "no" or exita == "No" or exita == "NO" or exita == "n" or exita == "N":
+            print("Clearing Variables")
+            time.sleep(0.5)
+        if n == 2:
+            print()
+            print("Clearing all Variables")
+            time.sleep(0.8)
+            for k,v in (globals().copy()).items():
+                if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+                    tv = str(type(v))
+                    if not tv == "<class 'module'>":
+                        del globals()[k]
+            del tv
+            prompt1()
+            return
+        for k,v in (globals().copy()).items():
+            if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+                tv = str(type(v))
+                if not tv == "<class 'module'>"  and not k == "mem" and not k == "sfxsounds":
+                    del globals()[k]
+        del tv
         menu()
+        return
+    except Exception:
+        try:
+            for k,v in (globals().copy()).items():
+                if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+                    tv = str(type(v))
+                    if not tv == "<class 'module'>" and not k == "mem" and not k == "sfxsounds":
+                        del globals()[k]
+            del tv
+            menu()
+            return
+        except Exception:
+            print()
+            print("A UNKNOWN ERROR HAS OCCURRED")
+            time.sleep(0.5)
+            menu()
+            return
+
+def prompt1():
+    global sfxsounds
+    sounds = 2
+    clear()
+    sounds = input("Do you want to enable the sound? ")
+    if sounds == "yes" or sounds == "Yes" or sounds == "YES" or sounds == "y" or sounds == "Y":
+        sfxsounds = 1
+        time.sleep(1)
+        sound()
+        return
+    elif sounds == "no" or sounds == "No" or sounds == "NO" or sounds == "n" or sounds == "N":
+        sfxsounds = 0
+        menu()
+        return
     else:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
-        prompt()
+        print()
+        prompt1()
+        return
 
-def srise(): # sun rise
+def download_bar1(current, total, width=80):
+    print("Downloading " + file + ": " + "%d%% [%d / %d] bytes" % (current / total * 100, current, total))
+
+def download_bar2(current, total, width=80):
+    print("Downloading " + file + ": " + "%d%% [%d / %d] bytes" % (current / total * 100, current, total))
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def sound():
+    global file
+    global sfxsounds
+    global soundchecks
+    global oselected
+    sfxsounds = 1
+    temp = 0
+    file = "none"
+    print()
+    if mem == 1:
+        download_bar = download_bar2
+    else:
+        download_bar = download_bar1
+    try:
+        path = (os.getcwd() + "/Music/")
+        isExist = os.path.exists(path)
+        if not isExist:
+            os.makedirs(path)
+        path = (os.getcwd() + "/Voice/")
+        isExist = os.path.exists(path)
+        if not isExist:
+            os.makedirs(path)
+        if not os.path.exists(os.getcwd() + "/Music/Planets.wav") == True:
+            try:
+                if E == 1:
+                    pass
+            except Exception:
+                E = 1
+            URL = "https://github.com/slyfalco/The-MoonHack-Project/raw/main/Music/Planets.wav"
+            file = "Planets.wav"
+            wget.download(URL, os.getcwd() + "/Music/Planets.wav", bar=download_bar)
+            if mem == 1:
+                print("Downloaded " + file)
+            else:
+                print()
+                print()
+                print("Downloaded " + file)
+                print()
+            time.sleep(0.02)
+        filestd = ["All", "Astronomical", "Auto", "Back", "Both", "Civil", "Disable", "ERROR", "First quarter moon", "Full moon", "INVALID", "Jupiter","Last quarter moon", "Manual", "Mars", "Mercury", "Moon", "Nautical", "Neptune", "New moon", "None", "Normal", "Phases" , "Saturn", "Sun", "Uranus", "Venus", "All"]
+        tempa2 = "/"
+        for i in filestd:
+            if not os.path.exists(os.getcwd() + "/Voice" + tempa2 + i + ".wav") == True:
+                try:
+                    if E == 1:
+                        pass
+                except Exception:
+                    E = 1
+                URL = ("https://github.com/slyfalco/The-MoonHack-Project/raw/main/Voice/" + i + ".wav")
+                file = (i + ".wav")
+                wget.download(URL, os.getcwd() + "/Voice" + tempa2 + i + ".wav", bar=download_bar)
+                if mem == 1:
+                    print("Downloaded " + file)
+                else:
+                    print()
+                    print()
+                    print("Downloaded " + file)
+                    print()
+                time.sleep(0.02)
+        try:
+            if E == 1:
+                del E
+                time.sleep(1)
+        except Exception:
+            pass
+        del file
+        temp = 1
+    except Exception:
+        file = 1
+        del file
+        print()
+        print("Unable to download Sound files")
+        time.sleep(0.5)
+        print("Try checking your internet connection")
+        time.sleep(2)
+        print()
+        print("Continuing without sound")
+        time.sleep(2)
+        sfxsounds = 0
+        temp = 2
+        print()
+    try:
+        if soundchecks == 1:
+            print("Continuing at Selected Option")
+            winsound.PlaySound(os.getcwd() + "/Music/Planets.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
+            time.sleep(1)
+            if oselected == "twilight":
+                oselected = "twilight"
+                del soundchecks
+                del oselected
+                twilight()
+                return
+            elif oselected == "moon":
+                oselected = "moon"
+                del soundchecks
+                del oselected
+                moon()
+                return
+            elif oselected == "mode":
+                oselected = "mode"
+                del soundchecks
+                del oselected
+                mode()
+                return
+            elif oselected == "mmode":
+                oselected = "mmode"
+                del soundchecks
+                mode()
+                return
+            elif oselected == "amode":
+                oselected = "amode"
+                del soundchecks
+                mode()
+                return
+            elif oselected == "mdate":
+                oselected = "smode"
+                del soundchecks
+                date()
+                return
+            elif oselected == "adate":
+                oselected = "amode"
+                del soundchecks
+                date()
+                return
+            elif oselected == "exit":
+                oselected = "exit"
+                del soundchecks
+                oselected = "exit"
+                menu()
+                return
+            elif oselected == "back1":
+                oselected = "back1"
+                del soundchecks
+                del oselected
+                delete()
+                menu()
+                return
+    except Exception:
+        if temp == 1:
+            winsound.PlaySound(os.getcwd() + "/Music/Planets.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
+            menu()
+            return
+        elif temp == 2:
+            menu()
+            return
+
+def srise():  # sun rise
     global mystr
     global psrise
     global nsrise
@@ -64,7 +287,7 @@ def srise(): # sun rise
     del mystr
     return
 
-def srisec(): # sun rise civil
+def srisec():  # sun rise civil
     global mystr
     global psrisec
     global nsrisec
@@ -83,7 +306,7 @@ def srisec(): # sun rise civil
     del mystr
     return
 
-def srisen(): # sun rise nutical
+def srisen():  # sun rise nutical
     global mystr
     global psrisen
     global nsrisen
@@ -91,18 +314,18 @@ def srisen(): # sun rise nutical
     psrisen = str(ephem.to_timezone(my_loc.previous_rising(ephem.Sun(my_loc), use_center=True), tz))
     mystr = "psrisen"
     dtime(psrisen)
-    psrisen = ("The Last Nutical Sunrise was on: " + psrisen + " in " + timezone + " Timezone")
+    psrisen = ("The Last Nautical Sunrise was on: " + psrisen + " in " + timezone + " Timezone")
     print(psrisen)
     nsrisen = str(ephem.to_timezone(my_loc.next_rising(ephem.Sun(my_loc), use_center=True), tz))
     mystr = "nsrisen"
     dtime(nsrisen)
-    nsrisen = ("The Next Nutical Sunrise is on: " + nsrisen + " in " + timezone + " Timezone")
+    nsrisen = ("The Next Nautical Sunrise is on: " + nsrisen + " in " + timezone + " Timezone")
     print(nsrisen)
     print()
     del mystr
     return
 
-def srisea(): # sun rise Astronomical
+def srisea():  # sun rise Astronomical
     global mystr
     global psrisea
     global nsrisea
@@ -121,7 +344,7 @@ def srisea(): # sun rise Astronomical
     del mystr
     return
 
-def sset(): # sun set
+def sset():  # sun set
     global mystr
     global psset
     global nsset
@@ -140,7 +363,7 @@ def sset(): # sun set
     del mystr
     return
 
-def ssetc(): # sun set cival
+def ssetc():  # sun set cival
     global mystr
     global pssetc
     global nssetc
@@ -159,7 +382,7 @@ def ssetc(): # sun set cival
     del mystr
     return
 
-def ssetn(): # sun set nutical
+def ssetn():  # sun set Nautical
     global mystr
     global pssetn
     global nssetn
@@ -167,18 +390,18 @@ def ssetn(): # sun set nutical
     pssetn = str(ephem.to_timezone(my_loc.previous_setting(ephem.Sun(my_loc), use_center=True), tz))
     mystr = "pssetn"
     dtime(pssetn)
-    pssetn = ("The Last Nutical Sunset was on: " + pssetn + " in " + timezone + " Timezone")
+    pssetn = ("The Last Nautical Sunset was on: " + pssetn + " in " + timezone + " Timezone")
     print(pssetn)
     nssetn = str(ephem.to_timezone(my_loc.next_setting(ephem.Sun(my_loc), use_center=True), tz))
     mystr = "nssetn"
     dtime(nssetn)
-    nssetn = ("The Next Nutical Sunset is on: " + nssetn + " in " + timezone + " Timezone")
+    nssetn = ("The Next Nautical Sunset is on: " + nssetn + " in " + timezone + " Timezone")
     print(nssetn)
     print()
     del mystr
     return
 
-def sseta(): # sun set Astronomical
+def sseta():  # sun set Astronomical
     global mystr
     global psseta
     global nsseta
@@ -197,7 +420,7 @@ def sseta(): # sun set Astronomical
     del mystr
     return
 
-def mphfq(): # First quarter moon
+def mphfq():  # First quarter moon
     global pmphfq
     global nmphfq
     global phack
@@ -219,7 +442,7 @@ def mphfq(): # First quarter moon
     del mystr
     return
 
-def mphlq(): # last quarter moon
+def mphlq():  # last quarter moon
     global pmphlq
     global nmphlq
     global phack
@@ -241,7 +464,7 @@ def mphlq(): # last quarter moon
     del phack
     return
 
-def mphf(): # full moon
+def mphf():  # full moon
     global pmphf
     global nmphf
     global phack
@@ -263,7 +486,7 @@ def mphf(): # full moon
     del phack
     return
 
-def mphn(): # new moon
+def mphn():  # new moon
     global pmphn
     global nmphn
     global mystr
@@ -282,7 +505,7 @@ def mphn(): # new moon
     del mystr
     return
 
-def mst(): #  moonset and rise
+def mst():  # moonset and rise
     global pmst
     global nmst
     global pmrt
@@ -295,23 +518,23 @@ def mst(): #  moonset and rise
     dtime(pmst)
     mystr = "mstph"
     mphase()
-    pmst = ("The Last Moonset was on: " + pmst + " and its a " + mstph + " in " + timezone  + " Timezone")
+    pmst = ("The Last Moonset was on: " + pmst + " and its a " + mstph + " in " + timezone + " Timezone")
     print(pmst)
     nmst = str(ephem.to_timezone(my_loc.next_setting(ephem.Moon(my_loc), use_center=True), tz))
     mystr = "nmst"
     dtime(nmst)
-    nmst = ("The Next Moonset is on: " + nmst + " and its a " + mstph + " in " + timezone  + " Timezone")
+    nmst = ("The Next Moonset is on: " + nmst + " and its a " + mstph + " in " + timezone + " Timezone")
     print(nmst)
     print()
     pmrt = str(ephem.to_timezone(my_loc.previous_rising(ephem.Moon(my_loc), use_center=True), tz))
     mystr = "pmrt"
     dtime(pmrt)
-    pmrt = ("The Last Moonrise was on: " + pmrt + " and its a " + mstph + " in " + timezone  + " Timezone")
+    pmrt = ("The Last Moonrise was on: " + pmrt + " and its a " + mstph + " in " + timezone + " Timezone")
     print(pmrt)
     nmrt = str(ephem.to_timezone(my_loc.next_rising(ephem.Moon(my_loc), use_center=True), tz))
     mystr = "nmrt"
     dtime(nmrt)
-    nmrt = ("The Next Moonrise is on: " + nmrt + " and its a " + mstph + " in " + timezone  + " Timezone")
+    nmrt = ("The Next Moonrise is on: " + nmrt + " and its a " + mstph + " in " + timezone + " Timezone")
     print(nmrt)
     print()
     del mstph
@@ -350,7 +573,7 @@ def merc():  # Mercury
     del mystr
     return
 
-def ven(): # Venus
+def ven():  # Venus
     global mystr
     global pvenr
     global nvenr
@@ -382,7 +605,7 @@ def ven(): # Venus
     del mystr
     return
 
-def mars(): #mars
+def mars():  #mars
     global mystr
     global pmarsr
     global nmarsr
@@ -414,7 +637,7 @@ def mars(): #mars
     del mystr
     return
 
-def jup(): # Jupiter
+def jup():  # Jupiter
     global mystr
     global pjupr
     global njupr
@@ -446,7 +669,7 @@ def jup(): # Jupiter
     del mystr
     return
 
-def sat(): # Saturn
+def sat():  # Saturn
     global mystr
     global psatr
     global nsatr
@@ -478,7 +701,7 @@ def sat(): # Saturn
     del mystr
     return
 
-def ura(): # Uranus
+def ura():  # Uranus
     global mystr
     global purar
     global nurar
@@ -510,7 +733,7 @@ def ura(): # Uranus
     del mystr
     return
 
-def nep(): # Neptune
+def nep():  # Neptune
     global mystr
     global pnepr
     global nnepr
@@ -542,31 +765,31 @@ def nep(): # Neptune
     del mystr
     return
 
-def mphase(): # Moon phase
+def mphase():  # Moon phase
     moon_my_loc = ephem.Moon(my_loc)
     moon_phase = moon_my_loc.moon_phase
     moon_phase_word = 0
     if moon_phase < .06:
         moon_phase_word = "New Moon"
-    elif moon_phase >.06 <= .19:
+    elif moon_phase > .06 <= .19:
         moon_phase_word = "Waxing Crescent Moon"
-    elif moon_phase >.19 <= .31:
+    elif moon_phase > .19 <= .31:
         moon_phase_word = "Third Quarter Moon"
-    elif moon_phase >.31 <= .44:
+    elif moon_phase > .31 <= .44:
         moon_phase_word = "Waxing Gibbous Moon"
-    elif moon_phase >.44 <= .56:
+    elif moon_phase > .44 <= .56:
         moon_phase_word = "Full Moon"
-    elif moon_phase >.56 <= .69:
+    elif moon_phase > .56 <= .69:
         moon_phase_word = "Waning Gibbous Moon"
-    elif moon_phase >.69 <= .81:
+    elif moon_phase > .69 <= .81:
         moon_phase_word = "First Quarter Moon"
-    elif moon_phase >.81 <= .94:
+    elif moon_phase > .81 <= .94:
         moon_phase_word = "Waning Crescent Moon"
-    elif moon_phase >.94:
+    elif moon_phase > .94:
         moon_phase_word = "New Moon"
     globals()[mystr] = moon_phase_word
 
-def dtime(n): # converts time to words
+def dtime(n):  # converts time to words
     full = str(n[-32]+n[-31]+n[-30]+n[-29]+n[-28]+n[-27]+n[-26]+n[-25]+n[-24]+n[-23]+n[-22]+n[-21]+n[-20]+n[-19]+n[-18]+n[-17])
     day = int(full[-8]+full[-7])
     if day == 1:
@@ -637,70 +860,445 @@ def dtime(n): # converts time to words
         minute = str(minute+"PM")
     year = str(full[-16]+full[-15]+full[-14]+full[-13])
     globals()[mystr] = (day+" "+month+" "+year+" at "+hour+":"+minute)
+    return
 
-def menu(): # The main menu
+def menu():  # The main menu
     global select
-    delete()
+    global sfxsounds
+    global soundchecks
+    global oselected
     clear()
     select = "0"
-    print("╭-------------------------------------╮")
-    print("│     The Planet Moonhack Project     │")
-    print("│                                     │")
-    print("│       Select an option below:       │")
-    print("│                                     │")
-    print("│  1: Sun             6: Jupiter      │")
-    print("│  2: Moon            7: Saturn       │")
-    print("│  3: Mercury         8: Uranus       │")
-    print("│  4: Venus           9: Neptune      │")
-    print("│  5: Mars           10: All          │")
-    print("│ 11: Exit                            │")
-    print("│                                     │")
-    print("│ Project By: Damien Di Falco         │")
-    print("╰-------------------------------------╯")
+    print("╭---------------------------------------╮")
+    print("│      The Planet Moonhack Project      │")
+    print("│                                       │")
+    print("│         Select an option below:       │")
+    print("│                                       │")
+    print("│  1: Sun             7: Saturn         │")
+    print("│  2: Moon            8: Uranus         │")
+    print("│  3: Mercury         9: Neptune        │")
+    print("│  4: Venus          10: All            │")
+    print("│  5: Mars           11: ", end="")
+    try:
+        if sfxsounds == 1:
+            sfxsounds = 1
+            print("Disable Sound  │")
+        elif sfxsounds == 0:
+            sfxsounds = 0
+            print("Enable Sound   │")
+        else:
+            print("ERROR          │")
+            sfxsounds = 2
+    except Exception:
+        pass
+        print("ERROR          │")
+        sfxsounds = 2
+    print("│  6: Jupiter        12: Exit           │")
+    print("│                                       │")
+    print("│ Project By: Damien Di Falco           │")
+    print("╰---------------------------------------╯")
     print()
     time.sleep(0.1)
     print()
     select = input("Select an option: ")
+    tempa = 1
     if select == "1" or select == "sun" or select == "Sun" or select == "SUN":
         select = "1"
-        twilight()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                twilight()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Sun.wav")
+                    twilight()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "twilight"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                twilight()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
     elif select == "2" or select == "moon" or select == "Moon" or select == "MOON":
         select = "2"
-        moon()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                moon()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Moon.wav")
+                    moon()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "moon"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                moon()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "3" or select == "mercury" or select == "Mercury" or select == "MERCURY":
         select = "3"
-        mode()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Mercury.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "4" or select == "venus" or select == "Venus" or select == "VENUS":
         select = "4"
-        mode()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Venus.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "5" or select == "mars" or select == "Mars" or select == "MARS":
         select = "5"
-        mode()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Mars.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "6" or select == "jupiter" or select == "Jupiter" or select == "JUPITER":
         select = "6"
-        mode()
-    elif select == "7" or select == "saturn" or select == "Venus" or select == "VENUS":
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Jupiter.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
+    elif select == "7" or select == "saturn" or select == "Saturn" or select == "SATURN":
         select = "7"
-        mode()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Saturn.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "8" or select == "uranus" or select == "Uranus" or select == "URANUS":
         select = "8"
-        mode()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                i = "/"
+                try:
+                    playsound(os.getcwd() + "/Voice" + i + "Uranus.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "9" or select == "neptune" or select == "Neptune" or select == "NEPTUNE":
         select = "9"
-        mode()
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                i = "/"
+                try:
+                    playsound(os.getcwd() + "/Voice" + i + "Neptune.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif select == "10" or select == "all" or select == "All" or select == "ALL":
         select = "10"
-        mode()
-    elif select == "11" or select == "exit" or select == "Exit" or select == "EXIT":
-        prompt()
-    else:
+        tempa = 0
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/All.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
+    if sfxsounds == 0:
+        if select == "11" or select == "enable sound" or select == "Enable sound" or select == "Enable Sound" or select == "ENABLE SOUND":
+            print()
+            sfxsounds = 1
+            tempa = 0
+            sound()
+            return
+    elif sfxsounds == 1:
+        if select == "11" or select == "disable sound" or select == "Disable sound" or select == "Disable Sound" or select == "DISABLE SOUND":
+            print()
+            winsound.PlaySound(None, winsound.SND_PURGE)
+            playsound(os.getcwd() + "/Voice/Disable.wav")
+            sfxsounds = 0
+            tempa = 0
+            menu()
+            return
+    elif sfxsounds == 2:
+        if select == "11" or select == "error" or select == "Error" or select == "ERROR":
+            winsound.PlaySound(None, winsound.SND_PURGE)
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            tempa = 0
+            delete(2)
+            return
+    if select == "12" or select == "exit" or select == "Exit" or select == "EXIT":
+        tempa = 0
+        print()
+        exita = input("Are you sure you want to quit? ")
+        if exita == "yes" or exita == "Yes" or exita == "YES" or exita == "y" or exita == "Y":
+            try:
+                print()
+                delete(0)
+                winsound.PlaySound(None, winsound.SND_PURGE)
+                exit("User quit from menu")
+            except SystemExit:
+                pass
+        elif exita == "no" or exita == "No" or exita == "NO" or exita == "n" or exita == "N":
+            delete(1)
+            return
+        else:
+            print()
+            print("INVALID RESPONSE")
+            time.sleep(0.5)
+            print()
+            menu()
+            return
+    if tempa == 1:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
         menu()
 
-def twilight(): # Twilight select
+def twilight():  # Twilight select
     global twili
+    global soundchecks
+    global oselected
     clear()
     twili = ("0")
     print("╭-------------------------------------╮")
@@ -711,7 +1309,7 @@ def twilight(): # Twilight select
     print("│                                     │")
     print("│  1: None            4: Astronomical │")
     print("│  2: Civil           5: All          │")
-    print("│  3: Nutical         6: Back         │")
+    print("│  3: Nautical        6: Back         │")
     print("│                                     │")
     print("│                                     │")
     print("│                                     │")
@@ -722,30 +1320,215 @@ def twilight(): # Twilight select
     twili = input("Select an option: ")
     if twili == "1" or twili == "none" or twili == "None" or twili == "NONE":
         twili = "1"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/None.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif twili == "2" or twili == "cival" or twili == "Cival" or twili == "CIVAL":
         twili = "2"
-        mode()
-    elif twili == "3" or twili == "nutical" or twili == "Nutical" or twili == "NUTICAL":
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Cival.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
+    elif twili == "3" or twili == "nautical" or twili == "Nautical" or twili == "NAUTICAL":
         twili = "3"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Nautical.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif twili == "4" or twili == "astronomical" or twili == "Astronomical" or twili == "ASTRONOMICAL":
         twili = "4"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Astronomical.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif twili == "5" or twili == "all" or twili == "All" or twili == "ALL":
         twili = "5"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/All.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif twili == "6" or twili == "back" or twili == "Back" or twili == "BACK":
-        menu()
+        del twili
+        try:
+            if sfxsounds == 0:
+                menu()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    delete()
+                    menu()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "back1"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                menu()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     else:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
         twilight()
+        return
 
 # moon options
-def moon(): # moon mode select
+def moon():  # moon mode select
     global smoon
+    global soundchecks
+    global oselected
     clear()
     smoon = ("0")
     print("╭-------------------------------------╮")
@@ -754,10 +1537,9 @@ def moon(): # moon mode select
     print("│           Pick Moon Mode:           │")
     print("│                                     │")
     print("│                                     │")
+    print("│    1: Normal           3: Both      │")
     print("│                                     │")
-    print("│    1: Normal           2. Phases    │")
-    print("│                                     │")
-    print("│    3: Both             4. Back      │")
+    print("│    2: Phases           4: Back      │")
     print("│                                     │")
     print("│                                     │")
     print("│ Project By: Damien Di Falco         │")
@@ -767,25 +1549,149 @@ def moon(): # moon mode select
     smoon = input("Select an option: ")
     if smoon == "1" or smoon == "normal" or smoon == "Normal" or smoon == "NORMAL":
         smoon = "1"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Normal.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "normal"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif smoon == "2" or smoon == "phases" or smoon == "Phases" or smoon == "PHASES":
         smoon = "2"
-        phases()
+        try:
+            if sfxsounds == 0:
+                phases()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Phases.wav")
+                    phases()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "phases"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif smoon == "3" or smoon == "both" or smoon == "Both" or smoon == "BOTH":
         smoon = "3"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Both.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "both"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif smoon == "4" or smoon == "back" or smoon == "Back" or smoon == "BACK":
-        menu()
+        del smoon
+        try:
+            if sfxsounds == 0:
+                menu()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    menu()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "back1"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                menu()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     else:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
         moon()
+        return
 
-def phases(): # moon phases
+def phases():  # moon phases
     global phase
+    global soundchecks
+    global oselected
     clear()
-    twili = ("0")
+    phase = ("0")
     print("╭-------------------------------------╮")
     print("│     The Planet Moonhack Project     │")
     print("│                                     │")
@@ -803,55 +1709,271 @@ def phases(): # moon phases
     print()
     time.sleep(0.1)
     phase = input("Select an option: ")
-    if phase == "1" or phase == "first quarter moon" or phase == "First Quarter Moon":
+    if phase == "1" or phase == "first quarter moon" or phase == "First Quarter Moon" or phase == "FIRST QUARTER MOON":
         phase = "1"
-        mode()
-    elif phase == "2" or phase == "last quarter moon" or phase == "Last Quarter Moon":
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/First quarter moon.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
+    elif phase == "2" or phase == "last quarter moon" or phase == "Last Quarter Moon" or phase == "LAST QUARTER MOON":
         phase = "2"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Last quarter moon.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif phase == "3" or phase == "full moon" or phase == "Full moon" or phase == "Full Moon" or phase == "FULL MOON":
         phase = "3"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Full moon.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif phase == "4" or phase == "new moon" or phase == "New moon" or phase == "New Moon" or phase == "NEW MOON":
         phase = "4"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/New moon.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif phase == "5" or phase == "all" or phase == "All" or phase == "ALL":
         phase = "5"
-        mode()
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/All.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     elif phase == "6" or phase == "back" or phase == "Back" or phase == "BACK":
-        menu()
+        del phase
+        try:
+            if sfxsounds == 0:
+                moon()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    moon()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "moon"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                moon()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     else:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
         phases()
+        return
 
-
-def mode(): # pick an option for how to find location
+def mode():  # pick an option for how to find location
     global longitude
     global latitude
     global altitude
     global timezone
+    global soundchecks
+    global oselected
     clear()
-    locms = ("0")
+    mcheck = 0
     print("╭-------------------------------------╮")
     print("│     The Planet Moonhack Project     │")
     print("│                                     │")
     print("│         Pick Location Mode:         │")
     print("│                                     │")
     print("│                                     │")
+    print("│     1: Manual           2: Auto     │")
     print("│                                     │")
-    print("│    1: Manual            2. Auto     │")
-    print("│                                     │")
-    print("│               3.Back                │")
+    print("│               3: Back               │")
     print("│                                     │")
     print("│                                     │")
     print("│ Project By: Damien Di Falco         │")
     print("╰-------------------------------------╯")
     print()
     time.sleep(0.1)
-    locms = input("Select an option: ")
+    try:
+        if oselected == "mmode":
+            mcheck = 1
+            locms = ("1")
+            del oselected
+        elif oselected == "amode":
+            mcheck = 1
+            locms = ("2")
+            del oselected
+    except Exception:
+        locms = ("0")
+        locms = input("Select an option: ")
     if locms == "1" or locms == "manual" or locms == "Manual" or locms == "MANUAL":
+        try:
+            if sfxsounds == 1 and mcheck == 0:
+                try:
+                    playsound(os.getcwd() + "/Voice/Manual.wav")
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mmode"
+                    sound()
+                    return
+            elif sfxsounds == 2 and mcheck == 0:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
         print()
         try:
             longitude = float(input("What is your longitude? "))
@@ -861,6 +1983,7 @@ def mode(): # pick an option for how to find location
             print("INVALID RESPONSE")
             time.sleep(0.5)
             mode()
+            return
         if -90 < longitude and longitude < 90:
             longitude = str(longitude)
             print()
@@ -869,6 +1992,7 @@ def mode(): # pick an option for how to find location
             print("INVALID NUMBER")
             time.sleep(0.5)
             mode()
+            return
         try:
             latitude = float(input("What is your latitude? "))
         except ValueError:
@@ -877,6 +2001,7 @@ def mode(): # pick an option for how to find location
             print("INVALID RESPONSE")
             time.sleep(0.5)
             mode()
+            return
         if -180 < latitude and latitude < 180:
             latitude = str(latitude)
             print()
@@ -885,6 +2010,7 @@ def mode(): # pick an option for how to find location
             print("INVALID NUMBER")
             time.sleep(0.5)
             mode()
+            return
         try:
             altitude = int(input("What is your elevation? "))
         except ValueError:
@@ -893,79 +2019,307 @@ def mode(): # pick an option for how to find location
             print("INVALID RESPONSE")
             time.sleep(0.5)
             mode()
+            return
         if 1.8 < altitude and altitude < 8848:
             print()
         else:
             print("INVALID NUMBER")
             time.sleep(0.5)
             mode()
+            return
         timezone = input("What is your timezone? ")
         try:
             tz = pytz.timezone(timezone)
             date()
+            return
         except pytz.exceptions.UnknownTimeZoneError:
             pass
             print()
             print("INVALID RESPONSE")
             time.sleep(0.5)
             mode()
+            return
     elif locms == "2" or locms == "auto" or locms == "Auto" or locms == "AUTO":
-        location = geocoder.ip('me')
-        latitude = location.geojson['features'][0]['properties']['lat']
-        longitude = location.geojson['features'][0]['properties']['lng']
-        cord = Point(latitude, longitude)
-        lat, lon, altitude = cord
-        tf = timezonefinder.TimezoneFinder()
-        timezone_str = tf.certain_timezone_at(lat=latitude, lng=longitude)
-        if timezone_str is None:
-            print()
-            print("Could not determine the time zone")
-            time.sleep(0.5)
-            mode()
-        else:
-            try:
-                dt = datetime(2020, 10, 31, 12, tzinfo=ZoneInfo(timezone_str))
-                timezone = str(dt.tzname())
-                longitude = str(longitude)
-                latitude = str(latitude)
-                altitude = int(altitude)
-            except pytz.exceptions.UnknownTimeZoneError:
-                pass
+        try:
+            if sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Auto.wav")
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "amode"
+                    sound()
+                    return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        try:
+            location = geocoder.ip('me')
+            latitude = location.geojson['features'][0]['properties']['lat']
+            longitude = location.geojson['features'][0]['properties']['lng']
+            cord = Point(latitude, longitude)
+            lat, lon, altitude = cord
+            tf = timezonefinder.TimezoneFinder()
+            timezone_str = tf.certain_timezone_at(lat=latitude, lng=longitude)
+            if timezone_str is None:
                 print()
                 print("Could not determine the time zone")
                 time.sleep(0.5)
                 mode()
-            date()
+                return
+            else:
+                try:
+                    dt = datetime(2020, 10, 31, 12, tzinfo=ZoneInfo(timezone_str))
+                    timezone = str(dt.tzname())
+                    longitude = str(longitude)
+                    latitude = str(latitude)
+                    altitude = int(altitude)
+                except pytz.exceptions.UnknownTimeZoneError:
+                    pass
+                    print()
+                    print("Could not determine the time zone")
+                    time.sleep(0.5)
+                    mode()
+                    return
+                date()
+                return
+        except Exception:
+            pass
+            time.sleep(0.2)
+            print()
+            print("Unable to determine location")
+            time.sleep(0.5)
+            print("Try checking your internet connection")
+            time.sleep(2)
+            mode()
+            return
     elif locms == "3" or locms == "back" or locms == "Back" or locms == "BACK":
-        menu()
+        del locms
+        try:
+            del loongitude
+        except Exception:
+            pass
+        try:
+            del latitude
+        except Exception:
+            pass
+        try:
+            del altitude
+        except Exception:
+            pass
+        try:
+            del timezone
+        except Exception:
+            pass
+        if select == "1":
+            try:
+                if sfxsounds == 0:
+                    twilight()
+                    return
+                elif sfxsounds == 1:
+                    try:
+                        playsound(os.getcwd() + "/Voice/Back.wav")
+                        twilight()
+                    except Exception:
+                        winsound.PlaySound(None, winsound.SND_PURGE)
+                        print()
+                        print("File not found")
+                        time.sleep(0.5)
+                        print("Downloading missing files")
+                        time.sleep(1)
+                        soundchecks = 1
+                        oselected = "twilight"
+                        sound()
+                        return
+                    return
+                elif sfxsounds == 2:
+                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    twilight()
+                    return
+            except Exception:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                delete(2)
+                return
+            return
+        elif select == "2":
+            if smoon == "1" or smoon == "3":
+                try:
+                    if sfxsounds == 0:
+                        moon()
+                        return
+                    elif sfxsounds == 1:
+                        try:
+                            playsound(os.getcwd() + "/Voice/Back.wav")
+                            moon()
+                        except Exception:
+                            winsound.PlaySound(None, winsound.SND_PURGE)
+                            print()
+                            print("File not found")
+                            time.sleep(0.5)
+                            print("Downloading missing files")
+                            time.sleep(1)
+                            soundchecks = 1
+                            oselected = "moon"
+                            sound()
+                            return
+                        return
+                    elif sfxsounds == 2:
+                        if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                            playsound(os.getcwd() + "/Voice/ERROR.wav")
+                        moon()
+                        return
+                except Exception:
+                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    delete(2)
+                    return
+                return
+            elif smoon == "2":
+                try:
+                    if sfxsounds == 0:
+                        phases()
+                        return
+                    elif sfxsounds == 1:
+                        try:
+                            playsound(os.getcwd() + "/Voice/Back.wav")
+                            phases()
+                        except Exception:
+                            winsound.PlaySound(None, winsound.SND_PURGE)
+                            print()
+                            print("File not found")
+                            time.sleep(0.5)
+                            print("Downloading missing files")
+                            time.sleep(1)
+                            soundchecks = 1
+                            oselected = "phases"
+                            sound()
+                            return
+                        return
+                    elif sfxsounds == 2:
+                        if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                            playsound(os.getcwd() + "/Voice/ERROR.wav")
+                        phases()
+                        return
+                except Exception:
+                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    delete(2)
+                    return
+                return
+            else:
+                print()
+                print("A UNKNOWN ERROR HAS OCCURRED")
+                time.sleep(0.5)
+                menu()
+                return
+        else:
+            try:
+                if sfxsounds == 0:
+                    menu()
+                    return
+                elif sfxsounds == 1:
+                    try:
+                        playsound(os.getcwd() + "/Voice/Back.wav")
+                        menu()
+                    except Exception:
+                        winsound.PlaySound(None, winsound.SND_PURGE)
+                        print()
+                        print("File not found")
+                        time.sleep(0.5)
+                        print("Downloading missing files")
+                        time.sleep(1)
+                        soundchecks = 1
+                        oselected = "back1"
+                        sound()
+                        return
+                    return
+                elif sfxsounds == 2:
+                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    menu()
+                    return
+            except Exception:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                delete(2)
+                return
+            return
+        return
     else:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
         mode()
-
-def date(): # imput your own date or do it automaticly
+        return
+def date():  # imput your own date or do it automaticly
     global mytime
+    global soundchecks
+    global oselected
     clear()
-    timedate = ("0")
+    mcheck = 0
     print("╭-------------------------------------╮")
     print("│     The Planet Moonhack Project     │")
     print("│                                     │")
     print("│           Pick Date Mode:           │")
     print("│                                     │")
     print("│                                     │")
+    print("│     1: Manual           2: Auto     │")
     print("│                                     │")
-    print("│    1: Manual            2. Auto     │")
-    print("│                                     │")
-    print("│               3.Back                │")
+    print("│               3: Back               │")
     print("│                                     │")
     print("│                                     │")
     print("│ Project By: Damien Di Falco         │")
     print("╰-------------------------------------╯")
     print()
     time.sleep(0.1)
-    timedate = input("Select an option: ")
+    try:
+        if oselected == "mdate":
+            mcheck = 1
+            timedate = ("1")
+            del oselected
+        elif oselected == "adate":
+            mcheck = 1
+            timedate = ("2")
+            del oselected
+    except Exception:
+        timedate = ("0")
+        timedate = input("Select an option: ")
     if timedate == "1" or timedate == "manual" or timedate == "Manual" or timedate == "MANUAL":
+        try:
+            if sfxsounds == 1 and mcheck == 0:
+                try:
+                    playsound(os.getcwd() + "/Voice/Manual.wav")
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mdate"
+                    sound()
+                    return
+            elif sfxsounds == 2 and mcheck == 0:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
         print()
         try:
             year = int(input("What is your year? "))
@@ -975,6 +2329,7 @@ def date(): # imput your own date or do it automaticly
             print("INVALID RESPONSE")
             time.sleep(0.5)
             date()
+            return
         if 999 < year and year < 10000:
             year = str(year)
             print()
@@ -983,6 +2338,7 @@ def date(): # imput your own date or do it automaticly
             print("INVALID YEAR")
             time.sleep(0.5)
             date()
+            return
         try:
             month = int(input("What is your month as a number? "))
         except ValueError:
@@ -991,6 +2347,7 @@ def date(): # imput your own date or do it automaticly
             print("INVALID RESPONSE")
             time.sleep(0.5)
             date()
+            return
         if 0 < month and month < 13:
             month = str(month)
             print()
@@ -999,6 +2356,7 @@ def date(): # imput your own date or do it automaticly
             print("INVALID MONTH")
             time.sleep(0.5)
             date()
+            return
         try:
             day = int(input("What is your day? "))
         except ValueError:
@@ -1007,6 +2365,7 @@ def date(): # imput your own date or do it automaticly
             print("INVALID DAY")
             time.sleep(0.5)
             date()
+            return
         if month == "1":
             if 0 < day and day < 32:
                 day = str(day)
@@ -1064,20 +2423,78 @@ def date(): # imput your own date or do it automaticly
             print("INVALID DAY")
             time.sleep(0.5)
             date()
+            return
         mytime = (year + "-" + month + "-" + day + " 12:00:00.000000")
         calc()
+        return
     elif timedate == "2" or timedate == "auto" or timedate == "Auto" or timedate == "AUTO":
+        try:
+            if sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Auto.wav")
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "adate"
+                    sound()
+                    return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
         mytime = datetime.now()
         calc()
+        return
     elif timedate == "3" or timedate == "back" or timedate == "Back" or timedate == "BACK":
-        mode()
+        del timedate
+        try:
+            if sfxsounds == 0:
+                mode()
+                return
+            elif sfxsounds == 1:
+                try:
+                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    mode()
+                except Exception:
+                    winsound.PlaySound(None, winsound.SND_PURGE)
+                    print()
+                    print("File not found")
+                    time.sleep(0.5)
+                    print("Downloading missing files")
+                    time.sleep(1)
+                    soundchecks = 1
+                    oselected = "mode"
+                    sound()
+                    return
+                return
+            elif sfxsounds == 2:
+                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                mode()
+                return
+        except Exception:
+            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            delete(2)
+            return
+        return
     else:
         print()
         print("INVALID RESPONSE")
         time.sleep(0.5)
         date()
+        return
 
-def calc(): # Runs all the calculations and the option to save to file
+def calc():  # Runs all the calculations and has the option to save to file
     global my_loc
     global tz
     clear()
@@ -1098,20 +2515,20 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Sunrise and Sunset'+ '\n' + '\n' + psrise + '\n' + nsrise + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '/n' + '\n' + 'Sunrise and Sunset' + '\n' + '\n' + psrise + '\n' + nsrise + '\n' + '\n')
                 f.write(psset + '\n' + nsset + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                delete()
-                menu()
+                input("Press enter ")
+                delete(1)
+                return
             else:
-                delete()
-                menu()
+                delete(1)
+                return
         elif twili == "2":
             underline(' Civil Sunrise and Sunset')
             print()
@@ -1122,7 +2539,7 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Civil Sunrise and Sunset'+ '\n' + '\n' + psrisec + '\n' + nsrisec + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Civil Sunrise and Sunset' + '\n' + '\n' + psrisec + '\n' + nsrisec + '\n' + '\n')
                 f.write(pssetc + '\n' + nssetc + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
@@ -1130,14 +2547,14 @@ def calc(): # Runs all the calculations and the option to save to file
                 print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                delete()
-                menu()
+                input("Press enter ")
+                delete(1)
+                return
             else:
-                delete()
-                menu()
+                delete(1)
+                return
         elif twili == "3":
-            underline(' Nutical Sunrise and Sunset')
+            underline(' Nautical Sunrise and Sunset')
             print()
             srisen()
             ssetn()
@@ -1146,7 +2563,7 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Nutical Sunrise and Sunset'+ '\n' + '\n' + psrisen + '\n' + nsrisen + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Nautical Sunrise and Sunset' + '\n' + '\n' + psrisen + '\n' + nsrisen + '\n' + '\n')
                 f.write(pssetn + '\n' + nssetn + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
@@ -1154,12 +2571,12 @@ def calc(): # Runs all the calculations and the option to save to file
                 print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                delete()
-                menu()
+                input("Press enter ")
+                delete(1)
+                return
             else:
-                delete()
-                menu()
+                delete(1)
+                return
         elif twili == "4":
             underline(' Astronomical Sunrise and Sunset')
             print()
@@ -1170,18 +2587,20 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Astronomical Sunrise and Sunset'+ '\n' + '\n' + psrisea + '\n' + nsrisea + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Astronomical Sunrise and Sunset' + '\n' + '\n' + psrisea + '\n' + nsrisea + '\n' + '\n')
                 f.write(psseta + '\n' + nsseta + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                menu()
+                input("Press enter ")
+                delete(1)
+                return
             else:
-                menu()
+                delete(1)
+                return
         elif twili == "5":
             underline(' Sunrise in all twilights')
             print()
@@ -1201,23 +2620,26 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Sunrise in all twilights'+ '\n' + '\n' + psrise + '\n' + nsrise + '\n' + '\n' + psrisec + '\n' + nsrisec + '\n' + '\n' + psrisen + '\n' + nsrisen + '\n' + '\n' + psrisea + '\n' + nsrisea + '\n' + '\n')
-                f.write('\n' + 'Sunset in all twilights'+ '\n' + '\n' + psset + '\n' + nsset + '\n' + '\n' + pssetc + '\n' + nssetc + '\n' + '\n' + pssetn + '\n' + nssetn + '\n' + '\n' + psseta + '\n' + nsseta + '\n' + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Sunrise in all twilights '+ '\n' + '\n' + psrise + '\n' + nsrise + '\n' + '\n' + psrisec + '\n' + nsrisec + '\n' + '\n' + psrisen + '\n' + nsrisen + '\n' + '\n' + psrisea + '\n' + nsrisea + '\n' + '\n')
+                f.write('\n' + 'Sunset in all twilights' + '\n' + '\n' + psset + '\n' + nsset + '\n' + '\n' + pssetc + '\n' + nssetc + '\n' + '\n' + pssetn + '\n' + nssetn + '\n' + '\n' + psseta + '\n' + nsseta + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                menu()
+                input("Press enter ")
+                delete(1)
+                return
             else:
-                menu()
+                delete(1)
+                return
         else:
             print()
             print("A UNKNOWN ERROR HAS OCCURRED")
             time.sleep(0.5)
-            menu()
+            delete(1)
+            return
     elif select == "2":
         if smoon == "1":
             underline(' Moonrise and Moonset')
@@ -1228,19 +2650,19 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Moonrise and Moonset'+ '\n' + '\n' + pmst + '\n' + nmst + '\n' + '\n' + '\n' + pmrt + '\n' + nmrt + '\n' + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Moonrise and Moonset' + '\n' + '\n' + pmst + '\n' + nmst + '\n' + '\n' + '\n' + pmrt + '\n' + nmrt + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                delete()
-                menu()
+                input("Press enter ")
+                delete(1)
+                return
             else:
-                delete()
-                menu()
+                delete(1)
+                return
         elif smoon == "2":
             if phase == "1":
                 underline(' First Quarter Moon Phase')
@@ -1250,19 +2672,19 @@ def calc(): # Runs all the calculations and the option to save to file
                 if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                     date = str(my_loc.date)
                     f = open("Planet Output File.txt", "a")
-                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'First Quarter Phase'+ '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n' + '\n')
+                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'First Quarter Phase' + '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n' + '\n')
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
-                    input("Press enter")
-                    delete()
-                    menu()
+                    input("Press enter ")
+                    delete(1)
+                    return
                 else:
-                    delete()
-                    menu()
+                    delete(1)
+                    return
             elif phase == "2":
                 underline(' Last Quarter Moon Phase')
                 print()
@@ -1271,19 +2693,19 @@ def calc(): # Runs all the calculations and the option to save to file
                 if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                     date = str(my_loc.date)
                     f = open("Planet Output File.txt", "a")
-                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Last Quarter Phase'+ '\n' + '\n' + pmphlq + '\n' + nmphlq + '\n' + '\n' + '\n')
+                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Last Quarter Phase' + '\n' + '\n' + pmphlq + '\n' + nmphlq + '\n' + '\n' + '\n')
                     f.close()
                     time.sleep(0.2)
                     print()
                     print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
-                    input("Press enter")
-                    delete()
-                    menu()
+                    input("Press enter ")
+                    delete(1)
+                    return
                 else:
-                    delete()
-                    menu()
+                    delete(1)
+                    return
             elif phase == "3":
                 underline(' Full Moon Phase')
                 print()
@@ -1292,19 +2714,19 @@ def calc(): # Runs all the calculations and the option to save to file
                 if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                     date = str(my_loc.date)
                     f = open("Planet Output File.txt", "a")
-                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Full Moon Phase'+ '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + '\n')
+                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Full Moon Phase' + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + '\n')
                     f.close()
                     time.sleep(0.2)
                     print()
                     print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
-                    input("Press enter")
-                    delete()
-                    menu()
+                    input("Press enter ")
+                    delete(1)
+                    return
                 else:
-                    delete()
-                    menu()
+                    delete(1)
+                    return
             elif phase == "4":
                 underline(' New Moon Phase')
                 print()
@@ -1313,19 +2735,19 @@ def calc(): # Runs all the calculations and the option to save to file
                 if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                     date = str(my_loc.date)
                     f = open("Planet Output File.txt", "a")
-                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'New Moon Phase'+ '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
+                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'New Moon Phase' + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
                     f.close()
                     time.sleep(0.2)
                     print()
                     print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
-                    input("Press enter")
-                    delete()
-                    menu()
+                    input("Press enter ")
+                    delete(1)
+                    return
                 else:
-                    delete()
-                    menu()
+                    delete(1)
+                    return
             elif phase == "5":
                 underline(' All Moon Phases')
                 print()
@@ -1338,24 +2760,26 @@ def calc(): # Runs all the calculations and the option to save to file
                 if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                     date = str(my_loc.date)
                     f = open("Planet Output File.txt", "a")
-                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'All Moon Phases'+ '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n'  + pmphlq + '\n' + nmphlq + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
+                    f.write('---------------' + date + '---------------' + '\n' + '\n' + 'All Moon Phases' + '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n'  + pmphlq + '\n' + nmphlq + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
                     f.close()
                     time.sleep(0.2)
                     print()
                     print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
-                    input("Press enter")
-                    delete()
+                    input("Press enter ")
+                    delete(1)
                     menu()
+                    return
                 else:
-                    delete()
-                    menu()
+                    delete(1)
+                    return
             else:
                 print()
                 print("A UNKNOWN ERROR HAS OCCURRED")
                 time.sleep(0.5)
-                menu()
+                delete(1)
+                return
         elif smoon == "3":
             underline(' All Moon Options')
             print()
@@ -1369,25 +2793,27 @@ def calc(): # Runs all the calculations and the option to save to file
             if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
                 date = str(my_loc.date)
                 f = open("Planet Output File.txt", "a")
-                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Moonrise and Moonset'+ '\n' + '\n' + pmst + '\n' + nmst + '\n' + '\n' + '\n' + pmrt + '\n' + nmrt + '\n' + '\n' + '\n')
-                f.write('All Moon Phases'+ '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n'  + pmphlq + '\n' + nmphlq + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
+                f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Moonrise and Moonset' + '\n' + '\n' + pmst + '\n' + nmst + '\n' + '\n' + '\n' + pmrt + '\n' + nmrt + '\n' + '\n' + '\n')
+                f.write('All Moon Phases' + '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n'  + pmphlq + '\n' + nmphlq + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
-                input("Press enter")
-                delete()
+                input("Press enter ")
+                delete(1)
                 menu()
+                return
             else:
-                delete()
-                menu()
+                delete(1)
+                return
         else:
             print()
             print("A UNKNOWN ERROR HAS OCCURRED")
             time.sleep(0.5)
-            menu()
+            delete(1)
+            return
     elif select == "3":
         underline(' Mercury rise and set')
         print()
@@ -1397,19 +2823,19 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Mercury rise and set'+ '\n' + '\n' + pmercr + '\n' + nmercr + '\n' + '\n' + '\n' + pmercs + '\n' + nmercs + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Mercury rise and set' + '\n' + '\n' + pmercr + '\n' + nmercr + '\n' + '\n' + '\n' + pmercs + '\n' + nmercs + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "4":
         underline(' Venus rise and set')
         print()
@@ -1419,19 +2845,19 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Venus rise and set'+ '\n' + '\n' + pvenr + '\n' + nvenr + '\n' + '\n' + '\n' + pvens + '\n' + nvens + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Venus rise and set' + '\n' + '\n' + pvenr + '\n' + nvenr + '\n' + '\n' + '\n' + pvens + '\n' + nvens + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "5":
         underline(' Mars rise and set')
         print()
@@ -1441,19 +2867,19 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Mars rise and set'+ '\n' + '\n' + pmarsr + '\n' + nmarsr + '\n' + '\n' + '\n' + pmarss + '\n' + nmarss + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Mars rise and set' + '\n' + '\n' + pmarsr + '\n' + nmarsr + '\n' + '\n' + '\n' + pmarss + '\n' + nmarss + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "6":
         underline(' Jupiter rise and set')
         print()
@@ -1463,19 +2889,19 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Jupiter rise and set'+ '\n' + '\n' + pjupr + '\n' + njupr + '\n' + '\n' + '\n' + pjups + '\n' + njups + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Jupiter rise and set' + '\n' + '\n' + pjupr + '\n' + njupr + '\n' + '\n' + '\n' + pjups + '\n' + njups + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "7":
         underline(' Saturn rise and set')
         print()
@@ -1485,19 +2911,19 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Saturn rise and set'+ '\n' + '\n' + psatr + '\n' + nsatr + '\n' + '\n' + '\n' + psats + '\n' + nsats + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Saturn rise and set' + '\n' + '\n' + psatr + '\n' + nsatr + '\n' + '\n' + '\n' + psats + '\n' + nsats + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "8":
         underline(' Uranus rise and set')
         print()
@@ -1507,19 +2933,18 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Uranus rise and set'+ '\n' + '\n' + purar + '\n' + nurar + '\n' + '\n' + '\n' + puras + '\n' + nuras + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Uranus rise and set' + '\n' + '\n' + purar + '\n' + nurar + '\n' + '\n' + '\n' + puras + '\n' + nuras + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "9":
         underline(' Neptune rise and set')
         print()
@@ -1529,19 +2954,19 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Neptune rise and set'+ '\n' + '\n' + pnepr + '\n' + nnepr + '\n' + '\n' + '\n' + pneps + '\n' + nneps + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Neptune rise and set' + '\n' + '\n' + pnepr + '\n' + nnepr + '\n' + '\n' + '\n' + pneps + '\n' + nneps + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            delete()
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            delete()
-            menu()
+            delete(1)
+            return
     elif select == "10":
         underline(' All options')
         print()
@@ -1600,34 +3025,33 @@ def calc(): # Runs all the calculations and the option to save to file
         if save == "y" or save == "Y" or save == "yes" or save == "Yes" or save == "YES":
             date = str(my_loc.date)
             f = open("Planet Output File.txt", "a")
-            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Sunrise in all twilights'+ '\n' + '\n' + psrise + '\n' + nsrise + '\n' + '\n' + psrisec + '\n' + nsrisec + '\n' + '\n' + psrisen + '\n' + nsrisen + '\n' + '\n' + psrisea + '\n' + nsrisea + '\n' + '\n')
-            f.write('\n' + 'Sunset in all twilights'+ '\n' + '\n' + psset + '\n' + nsset + '\n' + '\n' + pssetc + '\n' + nssetc + '\n' + '\n' + pssetn + '\n' + nssetn + '\n' + '\n' + psseta + '\n' + nsseta + '\n' + '\n' + '\n')
-            f.write('Moonrise and Moonset'+ '\n' + '\n' + pmst + '\n' + nmst + '\n' + '\n' + '\n' + pmrt + '\n' + nmrt + '\n' + '\n' + '\n')
-            f.write('All Moon Phases'+ '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n'  + pmphlq + '\n' + nmphlq + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
-            f.write('Mercury rise and set'+ '\n' + '\n' + pmercr + '\n' + nmercr + '\n' + '\n' + '\n' + pmercs + '\n' + nmercs + '\n' + '\n' + '\n')
-            f.write('Venus rise and set'+ '\n' + '\n' + pvenr + '\n' + nvenr + '\n' + '\n' + '\n' + pvens + '\n' + nvens + '\n' + '\n' + '\n')
-            f.write('Mars rise and set'+ '\n' + '\n' + pmarsr + '\n' + nmarsr + '\n' + '\n' + '\n' + pmarss + '\n' + nmarss + '\n' + '\n' + '\n')
-            f.write('Jupiter rise and set'+ '\n' + '\n' + pjupr + '\n' + njupr + '\n' + '\n' + '\n' + pjups + '\n' + njups + '\n' + '\n' + '\n')
-            f.write('Saturn rise and set'+ '\n' + '\n' + psatr + '\n' + nsatr + '\n' + '\n' + '\n' + psats + '\n' + nsats + '\n' + '\n' + '\n')
-            f.write('Uranus rise and set'+ '\n' + '\n' + purar + '\n' + nurar + '\n' + '\n' + '\n' + puras + '\n' + nuras + '\n' + '\n' + '\n')
-            f.write('Neptune rise and set'+ '\n' + '\n' + pnepr + '\n' + nnepr + '\n' + '\n' + '\n' + pneps + '\n' + nneps + '\n' + '\n' + '\n')
+            f.write('---------------' + date + '---------------' + '\n' + '\n' + 'Sunrise in all twilights' + '\n' + '\n' + psrise + '\n' + nsrise + '\n' + '\n' + psrisec + '\n' + nsrisec + '\n' + '\n' + psrisen + '\n' + nsrisen + '\n' + '\n' + psrisea + '\n' + nsrisea + '\n' + '\n')
+            f.write('\n' + 'Sunset in all twilights' + '\n' + '\n' + psset + '\n' + nsset + '\n' + '\n' + pssetc + '\n' + nssetc + '\n' + '\n' + pssetn + '\n' + nssetn + '\n' + '\n' + psseta + '\n' + nsseta + '\n' + '\n' + '\n')
+            f.write('Moonrise and Moonset' + '\n' + '\n' + pmst + '\n' + nmst + '\n' + '\n' + '\n' + pmrt + '\n' + nmrt + '\n' + '\n' + '\n')
+            f.write('All Moon Phases' + '\n' + '\n' + pmphfq + '\n' + nmphfq + '\n' + '\n'  + pmphlq + '\n' + nmphlq + '\n' + '\n' + pmphf + '\n' + nmphf + '\n' + '\n' + pmphn + '\n' + nmphn + '\n' + '\n' + '\n')
+            f.write('Mercury rise and set' + '\n' + '\n' + pmercr + '\n' + nmercr + '\n' + '\n' + '\n' + pmercs + '\n' + nmercs + '\n' + '\n' + '\n')
+            f.write('Venus rise and set' + '\n' + '\n' + pvenr + '\n' + nvenr + '\n' + '\n' + '\n' + pvens + '\n' + nvens + '\n' + '\n' + '\n')
+            f.write('Mars rise and set' + '\n' + '\n' + pmarsr + '\n' + nmarsr + '\n' + '\n' + '\n' + pmarss + '\n' + nmarss + '\n' + '\n' + '\n')
+            f.write('Jupiter rise and set' + '\n' + '\n' + pjupr + '\n' + njupr + '\n' + '\n' + '\n' + pjups + '\n' + njups + '\n' + '\n' + '\n')
+            f.write('Saturn rise and set' + '\n' + '\n' + psatr + '\n' + nsatr + '\n' + '\n' + '\n' + psats + '\n' + nsats + '\n' + '\n' + '\n')
+            f.write('Uranus rise and set' + '\n' + '\n' + purar + '\n' + nurar + '\n' + '\n' + '\n' + puras + '\n' + nuras + '\n' + '\n' + '\n')
+            f.write('Neptune rise and set '+ '\n' + '\n' + pnepr + '\n' + nnepr + '\n' + '\n' + '\n' + pneps + '\n' + nneps + '\n' + '\n' + '\n')
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
             time.sleep(0.7)
             print()
-            input("Press enter")
-            menu()
+            input("Press enter ")
+            delete(1)
+            return
         else:
-            menu()
+            delete(1)
+            return
     else:
         print()
         print("A UNKNOWN ERROR HAS OCCURRED")
         time.sleep(0.5)
-        menu()
-
-def delete(): # Deletes all varibles
-    gc.collect()
-
-menu() # starts main menu
+        delete(1)
+        return
+prompt1()  # starts program
