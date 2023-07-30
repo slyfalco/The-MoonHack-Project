@@ -25,12 +25,9 @@ Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backport
 - An option for manually inputting your location
 - An option for automatically finding the location
 - An option for manually inputting a date
-- Auto clears variables out of memory
+- Auto deletes variables out of memory
 - Automatic file downloads
 - Music and sound effects
-
-**In progress:**
-- To upload all changes by the 31st of July 2023
 - Improved Auto clear function
   
 *** ***
