@@ -1277,7 +1277,7 @@ def menu():  # The main menu
             except SystemExit:
                 pass
         elif exita == "no" or exita == "No" or exita == "NO" or exita == "n" or exita == "N":
-            delete(1)
+            delete(0)
             return
         else:
             print()
