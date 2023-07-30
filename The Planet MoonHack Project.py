@@ -55,7 +55,7 @@ def delete(n):
             print("Clearing all Variables")
             time.sleep(0.8)
             for k, v in (globals().copy()).items():
-                if not k.startswith('_') and k!='tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
+                if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
                     if not tv == "<class 'module'>":
                         del globals()[k]
@@ -63,9 +63,9 @@ def delete(n):
             prompt1()
             return
         for k, v in (globals().copy()).items():
-            if not k.startswith('_') and k!='tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
+            if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                 tv = str(type(v))
-                if not tv == "<class 'module'>"  and not k == "mem" and not k == "sfxsounds":
+                if not tv == "<class 'module'>" and not k == "mem" and not k == "sfxsounds":
                     del globals()[k]
         del tv
         menu()
@@ -73,7 +73,7 @@ def delete(n):
     except Exception:
         try:
             for k, v in (globals().copy()).items():
-                if not k.startswith('_') and k != 'tmp' and k != ' In' and k != 'Out' and not hasattr(v, '__call__'):
+                if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
                     if not tv == "<class 'module'>" and not k == "mem" and not k == "sfxsounds":
                         del globals()[k]
@@ -155,7 +155,7 @@ def sound():
                 print("Downloaded " + file)
                 print()
             time.sleep(0.02)
-        filestd = ["All", "Astronomical", "Auto", "Back", "Both", "Civil", "Disable", "ERROR", "First quarter moon", "Full moon", "INVALID", "Jupiter","Last quarter moon", "Manual", "Mars", "Mercury", "Moon", "Nautical", "Neptune", "New moon", "None", "Normal", "Phases" , "Saturn", "Sun", "Uranus", "Venus", "All"]
+        filestd = ["All", "Astronomical", "Auto", "Back", "Both", "Civil", "Disable", "ERROR", "First quarter moon", "Full moon", "INVALID", "Jupiter", "Last quarter moon", "Manual", "Mars", "Mercury", "Moon", "Nautical", "Neptune", "New moon", "None", "Normal", "Phases" , "Saturn", "Sun", "Uranus", "Venus", "All"]
         tempa2 = "/"
         for i in filestd:
             if not os.path.exists(os.getcwd() + "/Voice" + tempa2 + i + ".wav") == True:
@@ -2537,7 +2537,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -2561,7 +2561,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -2690,7 +2690,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -2711,7 +2711,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -2732,7 +2732,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -2757,7 +2757,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: '+ os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
