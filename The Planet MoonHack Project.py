@@ -28,6 +28,9 @@ def clear():
         elif mem == 1:
             os.system('cls' if os.name == 'nt' else 'clear')     # Checks if Mu is running
             return
+        else:
+            print(" \n" * 49)
+            return
     except Exception:
         find = wmi.WMI()
         for process in find.Win32_Process():
