@@ -34,10 +34,11 @@ def clear():
             if "pythonw.exe" == process.Name:  # cmd.exe
                 mem = 1
                 os.system('cls' if os.name == 'nt' else 'clear')
+                return
             else:
                 mem = 0
                 print(" \n" * 49)
-                return
+        return
 
 def underline(text):  # Underlines text
     print("\u0332".join(text))
