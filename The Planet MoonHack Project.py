@@ -34,7 +34,7 @@ def clear():
     except Exception:
         find = wmi.WMI()
         for process in find.Win32_Process():
-            if not "pythonw.exe" == process.Name:  # cmd.exe
+            if "pythonw.exe" == process.Name:  # cmd.exe
                 mem = 1
                 os.system('cls' if os.name == 'nt' else 'clear')
             else:
@@ -1348,7 +1348,7 @@ def twilight():  # Twilight select
             delete(2)
             return
         return
-    elif twili == "2" or twili == "cival" or twili == "Cival" or twili == "CIVAL":
+    elif twili == "2" or twili == "civil" or twili == "Civil" or twili == "CIVIL":
         twili = "2"
         try:
             if sfxsounds == 0:
@@ -1356,7 +1356,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Cival.wav")
+                    playsound(os.getcwd() + "/Voice/Civil.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
