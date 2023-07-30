@@ -31,10 +31,9 @@ def clear():
     except Exception:
         find = wmi.WMI()
         for process in find.Win32_Process():
-            if "pythonw.exe" == process.Name:  # cmd.exe
+            if not "pythonw.exe" == process.Name:  # cmd.exe
                 mem = 1
                 os.system('cls' if os.name == 'nt' else 'clear')
-                return
             else:
                 mem = 0
                 print(" \n" * 49)
