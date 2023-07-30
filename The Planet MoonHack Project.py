@@ -54,16 +54,16 @@ def delete(n):
             print()
             print("Clearing all Variables")
             time.sleep(0.8)
-            for k,v in (globals().copy()).items():
-                if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+            for k, v in (globals().copy()).items():
+                if not k.startswith('_') and k!='tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
                     if not tv == "<class 'module'>":
                         del globals()[k]
             del tv
             prompt1()
             return
-        for k,v in (globals().copy()).items():
-            if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+        for k, v in (globals().copy()).items():
+            if not k.startswith('_') and k!='tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                 tv = str(type(v))
                 if not tv == "<class 'module'>"  and not k == "mem" and not k == "sfxsounds":
                     del globals()[k]
@@ -72,8 +72,8 @@ def delete(n):
         return
     except Exception:
         try:
-            for k,v in (globals().copy()).items():
-                if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
+            for k, v in (globals().copy()).items():
+                if not k.startswith('_') and k != 'tmp' and k != ' In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
                     if not tv == "<class 'module'>" and not k == "mem" and not k == "sfxsounds":
                         del globals()[k]
