@@ -46,17 +46,12 @@ def underline(text):  # Underlines text
 def delete(n):
     try:
         if n == 0:
-            for k,v in (globals().copy()).items():
-                if not k.startswith('_') and k!='tmp' and k!='In' and k!='Out' and not hasattr(v, '__call__'):
-                    tv = str(type(v))
-                    if not tv == "<class 'module'>":
-                        del globals()[k]
-            return
-        if n == 1:
+            pass
+        elif n == 1:
             print()
             print("Clearing Variables")
             time.sleep(0.5)
-        if n == 2:
+        elif n == 2:
             print()
             print("Clearing all Variables")
             time.sleep(0.8)
@@ -1487,13 +1482,12 @@ def twilight():  # Twilight select
         del twili
         try:
             if sfxsounds == 0:
-                menu()
+                delete(0)
                 return
             elif sfxsounds == 1:
                 try:
                     playsound(os.getcwd() + "/Voice/Back.wav")
-                    delete()
-                    menu()
+                    delete(0)
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
                     print()
@@ -1509,7 +1503,7 @@ def twilight():  # Twilight select
             elif sfxsounds == 2:
                 if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
                     playsound(os.getcwd() + "/Voice/ERROR.wav")
-                menu()
+                delete(0)
                 return
         except Exception:
             if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
@@ -1650,12 +1644,12 @@ def moon():  # moon mode select
         del smoon
         try:
             if sfxsounds == 0:
-                menu()
+                delete(0)
                 return
             elif sfxsounds == 1:
                 try:
                     playsound(os.getcwd() + "/Voice/Back.wav")
-                    menu()
+                    delete(0)
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
                     print()
@@ -1671,7 +1665,7 @@ def moon():  # moon mode select
             elif sfxsounds == 2:
                 if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
                     playsound(os.getcwd() + "/Voice/ERROR.wav")
-                menu()
+                delete(0)
                 return
         except Exception:
             if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
