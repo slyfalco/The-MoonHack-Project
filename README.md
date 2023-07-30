@@ -30,7 +30,8 @@ Third-party modules: ephem, pytz, wmi, geocoder, timezonefinder, geopy, backport
 - Music and sound effects
 
 **In progress:**
-- To upload all changes by the 31th of July 2023
+- To upload all changes by the 31st of July 2023
+- Improved Auto clear function
   
 *** ***
 SCREENSHOT OF PROJECT OUTPUT:
