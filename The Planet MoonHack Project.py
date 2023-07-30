@@ -65,6 +65,13 @@ def delete(n):
             del tv
             prompt1()
             return
+        elif n == 3:
+            for k, v in (globals().copy()).items():
+                if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
+                    tv = str(type(v))
+                    if not tv == "<class 'module'>":
+                        del globals()[k]
+            return
         for k, v in (globals().copy()).items():
             if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                 tv = str(type(v))
@@ -1271,7 +1278,7 @@ def menu():  # The main menu
         if exita == "yes" or exita == "Yes" or exita == "YES" or exita == "y" or exita == "Y":
             try:
                 print()
-                delete(0)
+                delete(3)
                 winsound.PlaySound(None, winsound.SND_PURGE)
                 exit("User quit from menu")
             except SystemExit:
