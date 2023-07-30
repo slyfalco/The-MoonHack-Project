@@ -8,7 +8,7 @@ from datetime import datetime
 import os
 import winsound
 
-# Third party Packages    gc for deleting varibles
+# Third party Packages
 import pytz
 import ephem
 import wmi
