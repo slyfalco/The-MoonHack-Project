@@ -7,7 +7,6 @@ import time
 from datetime import datetime
 import os
 import winsound
-import gc
 
 # Third party Packages    gc for deleting varibles
 import pytz
