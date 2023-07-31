@@ -21,13 +21,14 @@ ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound
 **Completed:**
 - A save function
 - The do-all option
-- Checks if cmd is running
+- Python checker (Checks if cmd is running the code)
 - Options for twilight types
 - Options for moon phases
-- An option for manually inputting your location
-- An option for automatically finding the location
-- An option for manually inputting a date
-- Auto deletes variables out of memory
+- Manual location option
+- Automatic location option
+- Manual date option
+- Automatic date option
+- Variables delete system (prevents memory leaks)
 - Automatic file downloads
 - Music and sound effects
 - Improved Auto clear function
