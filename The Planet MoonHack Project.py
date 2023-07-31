@@ -18,6 +18,7 @@ from geopy.point import Point
 from backports.zoneinfo import ZoneInfo
 from playsound import playsound
 import wget
+import tzdata
 
 def clear():
     global mem
@@ -114,7 +115,10 @@ def prompt1():
     else:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         print()
         prompt1()
         return
@@ -1287,6 +1291,8 @@ def menu():  # The main menu
             delete(0)
             return
         else:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
             print()
             print("INVALID RESPONSE")
             time.sleep(0.5)
@@ -1296,7 +1302,10 @@ def menu():  # The main menu
     if tempa == 1:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         menu()
 
 def twilight():  # Twilight select
@@ -1523,7 +1532,10 @@ def twilight():  # Twilight select
     else:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         twilight()
         return
 
@@ -1685,7 +1697,10 @@ def moon():  # moon mode select
     else:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         moon()
         return
 
@@ -1913,7 +1928,10 @@ def phases():  # moon phases
     else:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         phases()
         return
 
@@ -1984,13 +2002,18 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             mode()
             return
         if -90 < longitude and longitude < 90:
             longitude = str(longitude)
             print()
         else:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
             print()
             print("INVALID NUMBER")
             time.sleep(0.5)
@@ -2002,7 +2025,10 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             mode()
             return
         if -180 < latitude and latitude < 180:
@@ -2011,7 +2037,10 @@ def mode():  # pick an option for how to find location
         else:
             print()
             print("INVALID NUMBER")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             mode()
             return
         try:
@@ -2020,14 +2049,21 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             mode()
             return
         if 1.8 < altitude and altitude < 8848:
             print()
         else:
+            print()
             print("INVALID NUMBER")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             mode()
             return
         timezone = input("What is your timezone? ")
@@ -2039,7 +2075,10 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             mode()
             return
     elif locms == "2" or locms == "auto" or locms == "Auto" or locms == "AUTO":
@@ -2263,7 +2302,10 @@ def mode():  # pick an option for how to find location
     else:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         mode()
         return
 def date():  # imput your own date or do it automaticly
@@ -2330,7 +2372,10 @@ def date():  # imput your own date or do it automaticly
             pass
             print()
             print("INVALID RESPONSE")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             date()
             return
         if 999 < year and year < 10000:
@@ -2339,7 +2384,10 @@ def date():  # imput your own date or do it automaticly
         else:
             print()
             print("INVALID YEAR")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             date()
             return
         try:
@@ -2348,7 +2396,10 @@ def date():  # imput your own date or do it automaticly
             pass
             print()
             print("INVALID RESPONSE")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             date()
             return
         if 0 < month and month < 13:
@@ -2357,16 +2408,22 @@ def date():  # imput your own date or do it automaticly
         else:
             print()
             print("INVALID MONTH")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             date()
             return
         try:
-            day = int(input("What is your day? "))
+            day = int(input("What is your day as a number? "))
         except ValueError:
             pass
             print()
-            print("INVALID DAY")
-            time.sleep(0.5)
+            print("INVALID RESPONSE")
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
             date()
             return
         if month == "1":
@@ -2424,7 +2481,8 @@ def date():  # imput your own date or do it automaticly
                 print()
         else:
             print("INVALID DAY")
-            time.sleep(0.5)
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
             date()
             return
         mytime = (year + "-" + month + "-" + day + " 12:00:00.000000")
@@ -2493,7 +2551,10 @@ def date():  # imput your own date or do it automaticly
     else:
         print()
         print("INVALID RESPONSE")
-        time.sleep(0.5)
+        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        else:
+            time.sleep(0.5)
         date()
         return
 
