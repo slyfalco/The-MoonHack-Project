@@ -115,10 +115,7 @@ def prompt1():
     else:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
-        else:
-            time.sleep(0.5)
+        time.sleep(0.5)
         print()
         prompt1()
         return
@@ -1302,8 +1299,11 @@ def menu():  # The main menu
     if tempa == 1:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        if sfxsounds == 1:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
         else:
             time.sleep(0.5)
         menu()
@@ -1532,8 +1532,11 @@ def twilight():  # Twilight select
     else:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        if sfxsounds == 1:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
         else:
             time.sleep(0.5)
         twilight()
@@ -1697,8 +1700,11 @@ def moon():  # moon mode select
     else:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        if sfxsounds == 1:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
         else:
             time.sleep(0.5)
         moon()
@@ -1928,8 +1934,11 @@ def phases():  # moon phases
     else:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        if sfxsounds == 1:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
         else:
             time.sleep(0.5)
         phases()
@@ -2002,8 +2011,11 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             mode()
@@ -2012,11 +2024,15 @@ def mode():  # pick an option for how to find location
             longitude = str(longitude)
             print()
         else:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
             print()
             print("INVALID NUMBER")
-            time.sleep(0.5)
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
+            else:
+                time.sleep(0.5)
             mode()
             return
         try:
@@ -2037,8 +2053,11 @@ def mode():  # pick an option for how to find location
         else:
             print()
             print("INVALID NUMBER")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             mode()
@@ -2049,8 +2068,11 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             mode()
@@ -2060,8 +2082,11 @@ def mode():  # pick an option for how to find location
         else:
             print()
             print("INVALID NUMBER")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             mode()
@@ -2075,8 +2100,11 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             mode()
@@ -2302,8 +2330,11 @@ def mode():  # pick an option for how to find location
     else:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        if sfxsounds == 1:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
         else:
             time.sleep(0.5)
         mode()
@@ -2372,8 +2403,11 @@ def date():  # imput your own date or do it automaticly
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             date()
@@ -2384,8 +2418,11 @@ def date():  # imput your own date or do it automaticly
         else:
             print()
             print("INVALID YEAR")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             date()
@@ -2396,8 +2433,11 @@ def date():  # imput your own date or do it automaticly
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             date()
@@ -2408,8 +2448,11 @@ def date():  # imput your own date or do it automaticly
         else:
             print()
             print("INVALID MONTH")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             date()
@@ -2420,8 +2463,11 @@ def date():  # imput your own date or do it automaticly
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
             else:
                 time.sleep(0.5)
             date()
@@ -2481,8 +2527,13 @@ def date():  # imput your own date or do it automaticly
                 print()
         else:
             print("INVALID DAY")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if sfxsounds == 1:
+                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                else:
+                    time.sleep(0.5)
+            else:
+                time.sleep(0.5)
             date()
             return
         mytime = (year + "-" + month + "-" + day + " 12:00:00.000000")
@@ -2551,8 +2602,11 @@ def date():  # imput your own date or do it automaticly
     else:
         print()
         print("INVALID RESPONSE")
-        if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-            playsound(os.getcwd() + "/Voice/INVALID.wav")
+        if sfxsounds == 1:
+            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            else:
+                time.sleep(0.5)
         else:
             time.sleep(0.5)
         date()
