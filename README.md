@@ -39,7 +39,7 @@ Windows
 **In progress:**
 - Third- party module installation checker
 - Third- party module installer
-- Making it possible to auto install pip
+- Making it possible to auto install pip if the user wants
 
 *** ***
 SCREENSHOT OF PROJECT OUTPUT:
