@@ -16,7 +16,7 @@ time, datetime, os, winsound
 ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound==1.2.2, wget, tzdata
 
 **Python platform:** <br />
-Windows (if you want music)
+Windows
 
 ***Note: Third-party modules need to be installed in the command prompt using pip***
 *** ***
