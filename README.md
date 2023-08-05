@@ -38,8 +38,6 @@ Windows
 - Automatic file downloads
 - Music and sound effects
 - Improved Auto clear function
-  
-**In progress:**
 - Third- party module installation checker
 - Third- party module installer
 - Making it possible to auto install pip if the user wants
