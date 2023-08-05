@@ -12,7 +12,7 @@ It can automatically use geolocation to locate your longitude, latitude, elevati
 **First-party modules:** <br />
 time, datetime, os, winsound
 
-**First-party modules only for downloading and instaling pip:** <br />
+**First-party modules only for downloading and instaling, pip and required modules:** <br />
 platform, pkg_resources, urllib.request, warnings, subprocess
 
 **Third-party modules:** <br />
