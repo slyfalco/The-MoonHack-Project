@@ -10,7 +10,10 @@ It can automatically use geolocation to locate your longitude, latitude, elevati
 *** ***
 ## **Requirements:**
 **First-party modules:** <br />
-time, datetime, os, winsound, subprocess, platform, warnings, pkg_resources
+time, datetime, os, winsound
+
+**First-party modules only for downloading and instaling pip:** <br />
+platform, pkg_resources, urllib.request, warnings, subprocess
 
 **Third-party modules:** <br />
 ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound==1.2.2, wget, tzdata
