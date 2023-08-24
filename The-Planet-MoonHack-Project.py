@@ -342,17 +342,11 @@ def download_bar(current, total, width=80): # Third party version
     print('Downloading ', file, ':' '[', chr(9608)*progress, ' ', completed, '.'*(barsize-progress), '] ', current+'/'+str(total),' Bytes', sep='', end='\r', flush=True)
 
 def download_hook(block_count, block_size, total): # Non-third party version for downloading pip
-    print('a')
     current = block_count * block_size
-    print('b')
     progress = int(current*barsize/total)
-    print('c')
     completed = str(int(current*100/total)) + '%'
-    print('d')
     current = str(int(current*total/total))
-    print('e')
     print('Downloading ', file, ':' '[', chr(9608)*progress, ' ', completed, '.'*(barsize-progress), '] ', current+'/'+str(total),' Bytes', sep='', end='\r', flush=True)
-    print('f')
 
 def sound():
     global file
@@ -3385,4 +3379,3 @@ def calc():  # Runs all the calculations and has the option to save to file
         return
 
 checkmod()
-os.execv(sys.executable, ['python'] + sys.argv)
