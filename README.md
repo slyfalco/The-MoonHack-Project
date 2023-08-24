@@ -39,7 +39,7 @@ Windows
 - Improved Auto clear function
 - Third- party module installation checker
 - Third- party module installer
-- Making it possible to auto install pip if the user wants
+- It can auto install pip if the user wants
 
 *** ***
 SCREENSHOT OF PROJECT OUTPUT:
