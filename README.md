@@ -21,7 +21,6 @@ ephem, pytz, wmi, geocoder, timezonefinder, geopy, backports.zoneinfo, playsound
 **Python platform:** <br />
 Windows
 
-***Note: Third-party modules need to be installed in the command prompt using pip***
 *** ***
 ## **Features:**
 **Completed:**
