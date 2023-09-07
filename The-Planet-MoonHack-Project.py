@@ -12,6 +12,7 @@ import time
 from datetime import datetime
 import os
 import winsound
+import sys
 
 def clear():
     global mem
@@ -114,22 +115,35 @@ def checkmod():
     global tzdata
     global ZoneInfo
     import platform
-    import pkg_resources
+    try:
+        import pkg_resources
+    except Exception:
+        piprompt = 3
+        print("You need pip to be installed to install required modules")
+        print()
     from urllib.request import urlretrieve    # non-third party Packages for downloading pip
     import urllib.request
     import subprocess
     try:
-        if piprompt == 0 or piprompt == 1 or piprompt == 2:
+        if piprompt == 0 or piprompt == 1 or piprompt == 2 or piprompt == 3:
             pass
     except Exception:
         upmod = 0
         bamod = 0
         downmod = 0
         piprompt = 0
-    required = {'pytz', 'ephem', 'wmi', 'geocoder', 'timezonefinder', 'geopy', 'wget', 'tzdata'}
-    installed = {pkg.key for pkg in pkg_resources.working_set}
-    missing = list(required - installed)
-    if missing:
+    try:
+        if piprompt == 3:
+            missing = 0
+        else:
+            required = {'pytz', 'ephem', 'wmi', 'geocoder', 'timezonefinder', 'geopy', 'wget', 'tzdata'}
+            installed = {pkg.key for pkg in pkg_resources.working_set}
+            missing = list(required - installed)
+    except Exception:
+        required = {'pytz', 'ephem', 'wmi', 'geocoder', 'timezonefinder', 'geopy', 'wget', 'tzdata'}
+        installed = {pkg.key for pkg in pkg_resources.working_set}
+        missing = list(required - installed)
+    if missing and not piprompt == 3:
         for i in missing:
             try:
                 mtmp = str(mtmp + ' ' + i)
@@ -137,40 +151,46 @@ def checkmod():
                  mtmp = str(i)
         missing = mtmp
     try:
-        version = pkg_resources.get_distribution("playsound").version
-        if version == '1.2.2':
-            pass
-        else:
+        if piprompt == 3:
             upmod = 1
-    except Exception:
-        upmod = 1
-    try:
-        version = str(platform.python_version())
-        if version < '3.9':
-            try:
-                from zoneinfo import ZoneInfo
-            except Exception:
-                try:
-                    from backports.zoneinfo import ZoneInfo
-                    del ZoneInfo
-                except Exception:
-                    bamod = 1
         else:
-            pass
-    except:
-        upmod = 1
-    if missing:
-        downmod = 1
+          uyfesguy = fhdjgvgighk
+    except Exception:
+        try:
+            version = pkg_resources.get_distribution("playsound").version
+            if version == '1.2.2':
+                pass
+            else:
+                upmod = 1
+        except Exception:
+            upmod = 1
+        try:
+            version = str(platform.python_version())
+            if version < '3.9':
+                try:
+                    from zoneinfo import ZoneInfo
+                except Exception:
+                    try:
+                        from backports.zoneinfo import ZoneInfo
+                        del ZoneInfo
+                    except Exception:
+                        bamod = 1
+            else:
+                pass
+        except:
+            upmod = 1
+        if missing:
+            downmod = 1
     if upmod == 1 or downmod == 1 or bamod == 1:
-        if piprompt == 0:
+        if piprompt == 0 and not piprompt == 3:
             print()
             asks = input("Would you like to install the required modules? ")
-        if piprompt == 1 or piprompt == 2:
+        if piprompt == 1 or piprompt == 2 or piprompt == 3:
             asks = "y"
         if asks == "yes" or asks == "Yes" or asks == "YES" or asks == "y" or asks == "Y":
             print()
             try:
-                urllib.request.urlopen('http://google.com')
+                urllib.request.urlopen('https://google.com')
                 wifiup = 1
             except Exception:
                 wifiup = 0
@@ -180,13 +200,29 @@ def checkmod():
                     time.sleep(2)
                     print()
                 try:
-                    if piprompt == 1:
+                    if piprompt == 1 or piprompt == 3:
                         abc2gdf = cba2gjh
                     if upmod == 1:
                         try:
-                            subprocess.call('pip install playsound==1.2.2', shell=True)
+                            result = subprocess.call('pip install playsound==1.2.2', shell=True)
+                            result = int(result)
+                            if result == 1:
+                                piprompt = 3
+                                print("You need pip to be installed to install required modules")
+                                print()
+                                del upmod
+                                del downmod
+                                del bamod
                         except Exception:
-                            os.system("pip install playsound==1.2.2")
+                            result = os.system("pip install playsound==1.2.2")
+                            result = int(result)
+                            if result == 1:
+                                piprompt = 3
+                                print("You need pip to be installed to install required modules")
+                                print()
+                                del upmod
+                                del downmod
+                                del bamod
                     if downmod == 1:
                         try:
                             subprocess.call(('pip install ' + missing), shell=True)
@@ -223,6 +259,14 @@ def checkmod():
                         try:
                             with urllib.request.urlopen(URL) as response:
                                 urlretrieve(URL, file, download_hook, data = None)
+                            print()
+                            print("Restart required")
+                            time.sleep(0.5)
+                            print()
+                            print("Restart the program")
+                            print()
+                            input("Press enter to quit ")
+                            return
                         except Exception:
                             print()
                             print("Unable to download pip")
@@ -270,7 +314,7 @@ def checkmod():
                         print("INVALID RESPONSE")
                         time.sleep(0.5)
                         print()
-                        piprompt = 1
+                        piprompt = 3
                         checkmod()
             else:
                 print()
@@ -3377,5 +3421,5 @@ def calc():  # Runs all the calculations and has the option to save to file
         time.sleep(0.5)
         delete(1)
         return
-
+#try:
 checkmod()
