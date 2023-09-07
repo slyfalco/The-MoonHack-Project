@@ -3421,5 +3421,12 @@ def calc():  # Runs all the calculations and has the option to save to file
         time.sleep(0.5)
         delete(1)
         return
-#try:
-checkmod()
+try:
+    checkmod()
+except Exception:
+    print()
+    print("AN ERROR HAS OCCURRED")
+    print("IT MAY HAVE BEEN CAUSED BY ADMIN RESTRICTIONS")
+    print()
+    input("Press enter to quit ")
+    
