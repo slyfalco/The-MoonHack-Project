@@ -115,10 +115,14 @@ def checkmod():
     global tzdata
     global ZoneInfo
     import platform
+    upmod = 0
+    bamod = 0
+    downmod = 0
     try:
         import pkg_resources
     except Exception:
         piprompt = 3
+        print()
         print("You need pip to be installed to install required modules")
         print()
     from urllib.request import urlretrieve    # non-third party Packages for downloading pip
@@ -128,9 +132,6 @@ def checkmod():
         if piprompt == 0 or piprompt == 1 or piprompt == 2 or piprompt == 3:
             pass
     except Exception:
-        upmod = 0
-        bamod = 0
-        downmod = 0
         piprompt = 0
     try:
         if piprompt == 3:
@@ -182,10 +183,10 @@ def checkmod():
         if missing:
             downmod = 1
     if upmod == 1 or downmod == 1 or bamod == 1:
-        if piprompt == 0 and not piprompt == 3:
+        if piprompt == 0 and not piprompt == 3 or piprompt == 2:
             print()
             asks = input("Would you like to install the required modules? ")
-        if piprompt == 1 or piprompt == 2 or piprompt == 3:
+        if piprompt == 1 or piprompt == 3:
             asks = "y"
         if asks == "yes" or asks == "Yes" or asks == "YES" or asks == "y" or asks == "Y":
             print()
@@ -208,40 +209,84 @@ def checkmod():
                             result = int(result)
                             if result == 1:
                                 piprompt = 3
+                                print()
                                 print("You need pip to be installed to install required modules")
                                 print()
                                 del upmod
                                 del downmod
                                 del bamod
+                            elif result == 0:
+                                pass
+                            else:
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                         except Exception:
                             result = os.system("pip install playsound==1.2.2")
                             result = int(result)
                             if result == 1:
                                 piprompt = 3
+                                print()
                                 print("You need pip to be installed to install required modules")
                                 print()
                                 del upmod
                                 del downmod
                                 del bamod
-                    if downmod == 1:
-                        try:
-                            subprocess.call(('pip install ' + missing), shell=True)
-                        except Exception:
-                            os.system("pip install " + missing)
+                            elif result == 0:
+                                pass
+                            else:
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                     if bamod == 1:
                         try:
                             subprocess.call('pip install backport.zoneinfo', shell=True)
                         except Exception:
                             os.system("pip install backport.zoneinfo")
+                    if downmod == 1:
+                        try:
+                            subprocess.call(('pip install ' + missing), shell=True)
+                        except Exception:
+                            os.system("pip install " + missing)
                     delete(3)
                     print()
-                    i = os.path.basename(__file__)
-                    os.rename(i, i.replace(" ", "-"))
                     try:
-                        subprocess.call('python ' + i, shell=True)
+                        i = os.path.basename(os.path.abspath(__file__))
+                        try:
+                            result = subprocess.call('python ' + i, shell=True)
+                        except Exception:
+                            result = os.system('python ' + i)
+                        if result == 0:
+                            return
+                        elif result == 2:
+                            print()
+                            print("To auto restart the file name of this program cannot have spaces")
+                            time.sleep(0.5)
+                            abcdf = uihgui
+                        else:
+                            print()
+                            print("AN UNKNOWN ERROR HAS OCCURRED")
+                            time.sleep(1)
+                            delete(3)
+                            input("Press enter to quit ")
+                            return
                     except Exception:
-                        os.system('python ' + i)
-                    return
+                        print()
+                        print("Unable to restart program after module installation")
+                        time.sleep(0.5)
+                        print()
+                        print("Restart the program")
+                        time.sleep(1)
+                        print()
+                        delete(3)
+                        input("Press enter to quit ")
+                        return
                 except Exception:
                     if piprompt == 0:
                         print()
@@ -256,17 +301,10 @@ def checkmod():
                         file = "get-pip.py"
                         print()
                         print("Downloading pip")
+                        print()
                         try:
                             with urllib.request.urlopen(URL) as response:
                                 urlretrieve(URL, file, download_hook, data = None)
-                            print()
-                            print("Restart required")
-                            time.sleep(0.5)
-                            print()
-                            print("Restart the program")
-                            print()
-                            input("Press enter to quit ")
-                            return
                         except Exception:
                             print()
                             print("Unable to download pip")
@@ -276,6 +314,7 @@ def checkmod():
                             input("Press enter to quit ")
                             return
                         print()
+                        print()
                         print("Downloaded " + file)
                         time.sleep(1)
                         try:
@@ -283,15 +322,50 @@ def checkmod():
                             print("Installing pip")
                             print()
                             try:
-                                os.system('get-pip.py')
+                                result = os.system('python get-pip.py')
+                                if result == 9009:
+                                    print()
+                                    print("Unable to install pip")
+                                    time.sleep(0.5)
+                                    print("Due to ADMIN RESTRICTIONS")
+                                    time.sleep(1)
+                                    delete(3)
+                                    input("Press enter to quit ")
+                                    return
+                                elif result == 0:
+                                    pass
+                                elif result == 1:
+                                    print()
+                                    print("Unable to install pip")
+                                    time.sleep(0.5)
+                                    print("FILE IS MISSING")
+                                    time.sleep(1)
+                                    delete(3)
+                                    input("Press enter to quit ")
+                                    return
+                                else:
+                                    try:
+                                        os.remove("get-pip.py")
+                                    except Exception:
+                                        pass
+                                    print()
+                                    print("AN UNKNOWN ERROR HAS OCCURRED")
+                                    time.sleep(1)
+                                    delete(3)
+                                    input("Press enter to quit ")
+                                    return
                             except Exception:
-                                subprocess.call(('python get-pip.py'), shell=True)
-                        except Exception:
+                                result = subprocess.call(('python get-pip.py'), shell=True)
                             os.remove("get-pip.py")
+                        except Exception:
+                            try:
+                                os.remove("get-pip.py")
+                            except Exception:
+                                pass
                             print()
                             print("Unable to install pip")
                             time.sleep(0.5)
-                            print("Due to an unknown reason")
+                            print("Due to UNKNOWN REASON")
                             time.sleep(1)
                             print()
                             print('You will have to download and install pip yourself here:', "https://pip.pypa.io/en/stable/installation")
@@ -300,7 +374,6 @@ def checkmod():
                             delete(3)
                             input("Press enter to quit ")
                             return
-                        os.remove("get-pip.py")
                         print()
                         piprompt = 2
                         checkmod()
@@ -3429,4 +3502,4 @@ except Exception:
     print("IT MAY HAVE BEEN CAUSED BY ADMIN RESTRICTIONS")
     print()
     input("Press enter to quit ")
-    
+
