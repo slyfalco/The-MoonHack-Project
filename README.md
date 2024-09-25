@@ -24,6 +24,8 @@ Windows
 *** ***
 ## **Features:**
 **Completed:**
+- Update checks
+- Updater
 - A save function
 - The do-all option
 - Python checker (Checks if cmd is running the code)
