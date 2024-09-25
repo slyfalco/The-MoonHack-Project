@@ -7,7 +7,7 @@ print("May take time to load on first boot")
 
 # Internal Packages
 import warnings
-warnings.simplefilter("ignore", DeprecationWarning)
+warnings.simplefilter("ignore", DeprecationWarning) # do a final check of os.system exception thith an unknown error has occered
 import time
 from datetime import datetime
 import os
@@ -51,6 +51,14 @@ def delete(n):
             print()
             print("Clearing Variables")
             time.sleep(0.5)
+            for k, v in (globals().copy()).items():
+                if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
+                    tv = str(type(v))
+                    if not tv == "<class 'module'>" and not k == "barsize" and not k == "mem" and not k == "sfxsounds" and not k == "tv":
+                        del globals()[k]
+            del tv
+            menu()
+            return
         elif n == 2:
             print()
             print("Clearing all Variables")
@@ -58,7 +66,7 @@ def delete(n):
             for k, v in (globals().copy()).items():
                 if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
-                    if not tv == "<class 'module'>" and not k == "barsize":
+                    if not tv == "<class 'module'>" and not k == "barsize" and not k == "tv":
                         del globals()[k]
             del tv
             prompt1()
@@ -67,39 +75,214 @@ def delete(n):
             for k, v in (globals().copy()).items():
                 if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
-                    if not tv == "<class 'module'>" and not k == "barsize":
+                    if not tv == "<class 'module'>" and not k == "barsize" and not k == "tv":
                         del globals()[k]
+            del tv
             return
         elif n == 4:
             for k, v in (globals().copy()).items():
                 if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
-                    tv = str(type(v))
                     if not k == "os" and not k == "subprocess":
                         del globals()[k]
-        for k, v in (globals().copy()).items():
-            if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
-                tv = str(type(v))
-                if not tv == "<class 'module'>" and not k == "barsize" and not k == "mem" and not k == "sfxsounds":
-                    del globals()[k]
-        del tv
-        menu()
-        return
-    except Exception:
-        try:
+        else:
             for k, v in (globals().copy()).items():
                 if not k.startswith('_') and k != 'tmp' and k != 'In' and k != 'Out' and not hasattr(v, '__call__'):
                     tv = str(type(v))
-                    if not tv == "<class 'module'>" and not k == "barsize" and not k == "mem" and not k == "sfxsounds":
+                    if not tv == "<class 'module'>" and not k == "barsize" and not k == "mem" and not k == "sfxsounds" and not k == "tv":
                         del globals()[k]
             del tv
-            menu()
-            return
+        menu()
+        return
+    except Exception:
+        print()
+        print("A UNKNOWN ERROR HAS OCCURRED")
+        time.sleep(1)
+        input("Press enter to quit ")
+        return
+
+def hupdater():
+    global file
+    from urllib.request import urlretrieve    # non-third party Packages for downloads
+    import urllib.request
+    import zipfile
+    try:
+        import subprocess
+    except Exception:
+        pass
+    try:
+        urllib.request.urlopen(r'https://google.com')
+        uversion = float(1.3)
+        nversion = float(1.4)
+        iloop = 1
+        while iloop == 1:
+            uversion = float(uversion + 0.1)
+            uversion = round(uversion,1)
+            uversions = str(uversion)
+            urllib.request.urlopen(r'https://github.com/slyfalco/The-MoonHack-Project/releases/tag/v' + uversions)
+    except Exception as err:
+        err = str(err)
+        try:
+            del iloop
         except Exception:
-            print()
-            print("A UNKNOWN ERROR HAS OCCURRED")
-            time.sleep(0.5)
-            menu()
+            pass
+        if str(err) == "HTTP Error 404: Not Found":
+            if uversion == nversion:
+                del uversion
+                del nversion
+                checkmod()
+                return
+            else:
+                uversion = float(uversion - 0.1)
+                uversion = round(uversion,2)
+                uversions = str(uversion)
+                print()
+                print("Version " + uversions + " is available")
+                time.sleep(0.8)
+                print()
+                upt = input("Would you like to update? ")
+                if upt == "y" or upt == "Y" or upt == "yes" or upt == "Yes" or upt == "YES":
+                    URL = (r"https://github.com/slyfalco/The-MoonHack-Project/releases/download/v" + uversions + r"/The.Planet.MoonHack.Project.zip")
+                    file = "update.zip"
+                    print()
+                    print("Downloading update")
+                    print()
+                    try:
+                         with urllib.request.urlopen(URL) as response:
+                            urlretrieve(URL, file, download_hook, data = None)
+                    except Exception:
+                        try:
+                            os.remove("update.zip")
+                        except Exception:
+                            pass
+                        print()
+                        print("Unable to download the update")
+                        time.sleep(2)
+                        print()
+                        wpt = input("Would you like to continue without the update? ")
+                        if wpt == "y" or wpt == "Y" or wpt == "yes" or wpt == "Yes" or wpt == "YES":
+                            time.sleep(0.2)
+                            print()
+                            print("Continuing without the update")
+                            time.sleep(1)
+                            print()
+                            #delete(3)
+                            #checkmod()
+                            return
+                        elif wpt == "no" or wpt == "No" or wpt == "NO" or wpt == "n" or wpt == "N":
+                            print()
+                            input("Press enter to quit ")
+                            return
+                        else:
+                            print()
+                            print("INVALID RESPONSE")
+                            time.sleep(0.5)
+                            print()
+                            input("Press enter to quit ")
+                            return
+                        return
+                    print()
+                    print()
+                    print("Extracting update")
+                    print()
+                    import shutil
+                    if os.path.isdir("Voice"):
+                        shutil.rmtree("Voice")
+                    if os.path.isdir("Music"):
+                        shutil.rmtree("Music")
+                    del shutil
+                    try:
+                        os.remove("The-Planet-MoonHack-Project.py")
+                    except Exception:
+                        pass
+                    try:
+                        wl = int(1)
+                        while os.path.exists("The-Planet-MoonHack-Project.py") == True and not wl == 50:
+                            time.sleep(0.2)
+                            wl = wl + 1
+                        if wl == 40:
+                            print()
+                            print("Unable to extract the update")
+                            time.sleep(2)
+                            print()
+                            input("Press enter to quit ")
+                            return
+                        with zipfile.ZipFile(os.getcwd() + r"\update.zip", 'r') as zip_ref:
+                            zip_ref.extractall(os.getcwd())
+                    except Exception:
+                        print()
+                        print("Unable to extract the update")
+                        time.sleep(2)
+                        print()
+                        input("Press enter to quit ")
+                        return
+                    os.remove("update.zip")
+                    print()
+                    print("Update complete")
+                    time.sleep(1)
+                    print()
+                    try:
+                        try:
+                            result = subprocess.call('py The-Planet-MoonHack-Project.py')
+                        except Exception:
+                            result = os.system('py The-Planet-MoonHack-Project.py')
+                        if result == 0:
+                            return
+                        elif result == 2:
+                            print()
+                            print("To auto restart the file name of this program cannot have spaces")
+                            time.sleep(0.5)
+                            abcdf = uihgui
+                        else:
+                            print()
+                            print("AN UNKNOWN ERROR HAS OCCURRED")
+                            time.sleep(1)
+                            delete(3)
+                            print()
+                            input("Press enter to quit ")
+                            return
+                    except Exception:
+                        print()
+                        print("Unable to restart program after module installation")
+                        time.sleep(0.5)
+                        print()
+                        print("Restart the program manually")
+                        time.sleep(1)
+                        print()
+                        delete(3)
+                        print()
+                        input("Press enter to quit ")
+                        return
+                elif upt == "no" or upt == "No" or upt == "NO" or upt == "n" or upt == "N":
+                    print()
+                    delete(3)
+                    checkmod()
+                    return
+                else:
+                    print()
+                    print("INVALID RESPONSE")
+                    time.sleep(0.5)
+                    print()
+                    delete(3)
+                    checkmod()
+                    return
+        elif err == "<urlopen error [Errno 11001] getaddrinfo failed>": # No internet
+            try:
+                del uversion
+                del nversion
+            except Exception:
+                pass
+            delete(3)
+            checkmod()
             return
+        else:
+            print("AN UNKNOWN ERROR HAS OCCURRED")
+            print()
+            print(err)
+            print()
+            input("Press enter to quit ")
+            return
+        return
+
 
 def checkmod():
     global file
@@ -119,15 +302,175 @@ def checkmod():
     bamod = 0
     downmod = 0
     try:
-        import pkg_resources
+        import subprocess
     except Exception:
-        piprompt = 3
-        print()
-        print("You need pip to be installed to install required modules")
-        print()
+        pass
+    try:
+        import pkg_resources
+        try:
+            result = subprocess.call('pip', stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+            result = int(result)
+            if result == 1:
+                piprompt = 3
+                print()
+                print("You need pip to be installed to install required modules")
+                print()
+            elif result == 0:
+                pass
+            else:
+                print()
+                print("AN UNKNOWN ERROR HAS OCCURRED")
+                time.sleep(1)
+                delete(3)
+                input("Press enter to quit ")
+                return
+        except Exception:
+            try:
+                result = os.system(r"start /wait cmd /c {pip}")
+            except Exception:
+                print()
+                print("AN UNKNOWN ERROR HAS OCCURRED")
+                time.sleep(1)
+                delete(3)
+                print()
+                input("Press enter to quit ")
+                return
+            result = int(result)
+            if result == 1:
+                piprompt = 3
+                print()
+                print("You need pip to be installed to install required modules")
+                print()
+            elif result == 0:
+                pass
+            else:
+                print()
+                print("AN UNKNOWN ERROR HAS OCCURRED")
+                time.sleep(1)
+                delete(3)
+                input("Press enter to quit ")
+                return
+    except Exception:
+        try:
+            result = subprocess.call('pip', stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+        except Exception:
+            try:
+                result = os.system(r"start /wait cmd /c {pip}")
+            except Exception:
+                print()
+                print("AN UNKNOWN ERROR HAS OCCURRED")
+                time.sleep(1)
+                delete(3)
+                print()
+                input("Press enter to quit ")
+                return
+        result = int(result)
+        if result == 1:
+            piprompt = 3
+            print()
+            print("You need pip to be installed to install required modules")
+            print()
+        elif result == 0:
+            print()
+            print("You need setuptools to be installed to check is required modules are installed")
+            print()
+            pipasks = input("Would you like to install setuptools? ")
+            if pipasks == "yes" or pipasks == "Yes" or pipasks == "YES" or pipasks == "y" or pipasks == "Y":
+                try:
+                    urllib.request.urlopen(r'https://google.com')
+                except Exception:
+                    print()
+                    print("The internet is unavailable")
+                    time.sleep(1)
+                    delete(3)
+                    print()
+                    input("Press enter to quit ")
+                    return
+                print()
+                print("Installing setup tools")
+                print()
+                try:
+                    result = subprocess.call('pip install setuptools', shell=True)
+                    result = int(result)
+                    if result == 1:
+                        print()
+                        print("Unable to install setuptools")
+                        time.sleep(2)
+                        delete(3)
+                        print()
+                        input("Press enter to quit ")
+                        return
+                    elif result == 0:
+                        print()
+                        print("Installed setuptools")
+                        time.sleep(2)
+                        print()
+                        try:
+                            del piprompt
+                        except Exception:
+                            pass
+                        piprompt = 2
+                        checkmod()
+                        return
+                    else:
+                        print()
+                        print("AN UNKNOWN ERROR HAS OCCURRED")
+                        time.sleep(1)
+                        delete(3)
+                        print()
+                        input("Press enter to quit ")
+                        return
+                except Exception:
+                    result = os.system('pip install setuptools')
+                    result = int(result)
+                    if result == 1:
+                        print()
+                        print("Unable to install setuptools")
+                        time.sleep(2)
+                        delete(3)
+                        print()
+                        input("Press enter to quit ")
+                        return
+                    elif result == 0:
+                        print()
+                        print("Installed setuptools")
+                        time.sleep(2)
+                        print()
+                        try:
+                            del piprompt
+                        except Exception:
+                            pass
+                        checkmod()
+                        return
+                    else:
+                        print()
+                        print("AN UNKNOWN ERROR HAS OCCURRED")
+                        time.sleep(1)
+                        delete(3)
+                        print()
+                        input("Press enter to quit ")
+                        return
+            elif pipasks == "no" or pipasks == "No" or pipasks == "NO" or pipasks == "n" or pipasks == "N":
+                print()
+                input("Press enter to quit ")
+                return
+            else:
+                print()
+                print("INVALID RESPONSE")
+                time.sleep(2)
+                print()
+                input("Press enter to quit ")
+                return
+        else:
+            print()
+            print("AN UNKNOWN ERROR HAS OCCURRED")
+            time.sleep(1)
+            delete(3)
+            print()
+            input("Press enter to quit ")
+            return
     from urllib.request import urlretrieve    # non-third party Packages for downloading pip
     import urllib.request
-    import subprocess
     try:
         if piprompt == 0 or piprompt == 1 or piprompt == 2 or piprompt == 3:
             pass
@@ -179,7 +522,7 @@ def checkmod():
             else:
                 pass
         except:
-            upmod = 1
+            bamod = 1
         if missing:
             downmod = 1
     if upmod == 1 or downmod == 1 or bamod == 1:
@@ -191,10 +534,17 @@ def checkmod():
         if asks == "yes" or asks == "Yes" or asks == "YES" or asks == "y" or asks == "Y":
             print()
             try:
-                urllib.request.urlopen('https://google.com')
+                urllib.request.urlopen(r'https://google.com')
                 wifiup = 1
             except Exception:
                 wifiup = 0
+                print()
+                print("The internet is unavailable")
+                time.sleep(1)
+                delete(3)
+                print()
+                input("Press enter to quit ")
+                return
             if wifiup == 1:
                 if piprompt == 0 or piprompt == 2:
                     print("It may take up to 3 mins")
@@ -205,6 +555,16 @@ def checkmod():
                         abc2gdf = cba2gjh
                     if upmod == 1:
                         try:
+                            try:
+                                urllib.request.urlopen(r'https://google.com')
+                            except Exception:
+                                print()
+                                print("The internet is unavailable")
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
                             result = subprocess.call('pip install playsound==1.2.2', shell=True)
                             result = int(result)
                             if result == 1:
@@ -225,6 +585,16 @@ def checkmod():
                                 input("Press enter to quit ")
                                 return
                         except Exception:
+                            try:
+                                urllib.request.urlopen(r'https://google.com')
+                            except Exception:
+                                print()
+                                print("The internet is unavailable")
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
                             result = os.system("pip install playsound==1.2.2")
                             result = int(result)
                             if result == 1:
@@ -246,22 +616,130 @@ def checkmod():
                                 return
                     if bamod == 1:
                         try:
-                            subprocess.call('pip install backport.zoneinfo', shell=True)
+                            try:
+                                urllib.request.urlopen(r'https://google.com')
+                            except Exception:
+                                print()
+                                print("The internet is unavailable")
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
+                            result = subprocess.call('pip install backport.zoneinfo', shell=True)
+                            if result == 1:
+                                piprompt = 3
+                                print()
+                                print("You need pip to be installed to install required modules")
+                                print()
+                                del upmod
+                                del downmod
+                                del bamod
+                            elif result == 0:
+                                pass
+                            else:
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                         except Exception:
-                            os.system("pip install backport.zoneinfo")
+                            try:
+                                urllib.request.urlopen(r'https://google.com')
+                            except Exception:
+                                print()
+                                print("The internet is unavailable")
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
+                            result = os.system("pip install backport.zoneinfo")
+                            if result == 1:
+                                piprompt = 3
+                                print()
+                                print("You need pip to be installed to install required modules")
+                                print()
+                                del upmod
+                                del downmod
+                                del bamod
+                            elif result == 0:
+                                pass
+                            else:
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                     if downmod == 1:
                         try:
-                            subprocess.call(('pip install ' + missing), shell=True)
+                            try:
+                                urllib.request.urlopen(r'https://google.com')
+                            except Exception:
+                                print()
+                                print("The internet is unavailable")
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
+                            result = subprocess.call(('pip install ' + missing), shell=True)
+                            if result == 1:
+                                piprompt = 3
+                                print()
+                                print("You need pip to be installed to install required modules")
+                                print()
+                                del upmod
+                                del downmod
+                                del bamod
+                            elif result == 0:
+                                pass
+                            else:
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                         except Exception:
-                            os.system("pip install " + missing)
+                            try:
+                                urllib.request.urlopen(r'https://google.com')
+                            except Exception:
+                                print()
+                                print("The internet is unavailable")
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
+                            result = os.system("pip install " + missing)
+                            if result == 1:
+                                piprompt = 3
+                                print()
+                                print("You need pip to be installed to install required modules")
+                                print()
+                                del upmod
+                                del downmod
+                                del bamod
+                            elif result == 0:
+                                pass
+                            else:
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                     delete(3)
                     print()
                     try:
                         i = os.path.basename(os.path.abspath(__file__))
                         try:
-                            result = subprocess.call('python ' + i, shell=True)
+                            result = subprocess.call('py ' + i, shell=True)
                         except Exception:
-                            result = os.system('python ' + i)
+                            result = os.system('py ' + i)
                         if result == 0:
                             return
                         elif result == 2:
@@ -274,6 +752,7 @@ def checkmod():
                             print("AN UNKNOWN ERROR HAS OCCURRED")
                             time.sleep(1)
                             delete(3)
+                            print()
                             input("Press enter to quit ")
                             return
                     except Exception:
@@ -297,8 +776,18 @@ def checkmod():
                         print()
                     pipasks = input("Would you like to download and install pip? ")
                     if pipasks == "yes" or pipasks == "Yes" or pipasks == "YES" or pipasks == "y" or pipasks == "Y":
-                        URL = "https://github.com/pypa/get-pip/raw/main/public/get-pip.py"
+                        URL = r"https://github.com/pypa/get-pip/raw/main/public/get-pip.py"
                         file = "get-pip.py"
+                        try:
+                            urllib.request.urlopen(r'https://google.com')
+                        except Exception:
+                            print()
+                            print("The internet is unavailable")
+                            time.sleep(1)
+                            delete(3)
+                            print()
+                            input("Press enter to quit ")
+                            return
                         print()
                         print("Downloading pip")
                         print()
@@ -322,40 +811,69 @@ def checkmod():
                             print("Installing pip")
                             print()
                             try:
-                                result = os.system('python get-pip.py')
-                                if result == 9009:
-                                    print()
-                                    print("Unable to install pip")
-                                    time.sleep(0.5)
-                                    print("Due to ADMIN RESTRICTIONS")
-                                    time.sleep(1)
-                                    delete(3)
-                                    input("Press enter to quit ")
-                                    return
-                                elif result == 0:
-                                    pass
-                                elif result == 1:
-                                    print()
-                                    print("Unable to install pip")
-                                    time.sleep(0.5)
-                                    print("FILE IS MISSING")
-                                    time.sleep(1)
-                                    delete(3)
-                                    input("Press enter to quit ")
-                                    return
-                                else:
-                                    try:
-                                        os.remove("get-pip.py")
-                                    except Exception:
-                                        pass
+                                result = os.system('py get-pip.py')
+                            except Exception:
+                                try:
+                                    result = subprocess.call(('py get-pip.py'), shell=True)
+                                except Exception:
                                     print()
                                     print("AN UNKNOWN ERROR HAS OCCURRED")
                                     time.sleep(1)
                                     delete(3)
                                     input("Press enter to quit ")
                                     return
-                            except Exception:
-                                result = subprocess.call(('python get-pip.py'), shell=True)
+                            if result == 9009:
+                                print()
+                                print("Unable to install pip")
+                                time.sleep(0.5)
+                                print("Manage App Execution Aliases for python is enabled")
+                                time.sleep(0.5)
+                                print()
+                                print('To be able to install pip')
+                                print('Go to -> "start" and type "Manage App Execution Aliases". Go to it and turn off "Python')
+                                time.sleep(1)
+                                delete(3)
+                                print()
+                                input("Press enter to quit ")
+                                return
+                            elif result == 0:
+                                pass
+                            elif result == 1:
+                                if os.path.exists(os.getcwd() + r"\get-pip.py") == True:
+                                    print()
+                                    print("Unable to install pip")
+                                    time.sleep(0.5)
+                                    print("Environment variables is disabled")      # finish download setup and open, after finished installation close then try to run get-pip.py again
+                                    time.sleep(1)                                   # if fails then still unable to install pip, Environment variables is still disabled
+                                    print()
+                                    print("To enable environment variables")
+                                    print("Open python setup for your python version and click modify then next")
+                                    print("and tick add python to environment variables, then click install")
+                                    time.sleep(3)
+                                    delete(3)
+                                    print()
+                                    input("Press enter to quit ")
+                                else:
+                                    print()
+                                    print("Unable to install pip")
+                                    time.sleep(0.5)
+                                    print("FILE IS MISSING")
+                                    time.sleep(1)
+                                    delete(3)
+                                    print()
+                                    input("Press enter to quit ")
+                                return
+                            else:
+                                try:
+                                    os.remove("get-pip.py")
+                                except Exception:
+                                    pass
+                                print()
+                                print("AN UNKNOWN ERROR HAS OCCURRED")
+                                time.sleep(1)
+                                delete(3)
+                                input("Press enter to quit ")
+                                return
                             os.remove("get-pip.py")
                         except Exception:
                             try:
@@ -368,7 +886,7 @@ def checkmod():
                             print("Due to UNKNOWN REASON")
                             time.sleep(1)
                             print()
-                            print('You will have to download and install pip yourself here:', "https://pip.pypa.io/en/stable/installation")
+                            print('You will have to download and install pip yourself here:', r"https://pip.pypa.io/en/stable/installation")
                             print()
                             time.sleep(1)
                             delete(3)
@@ -377,6 +895,7 @@ def checkmod():
                         print()
                         piprompt = 2
                         checkmod()
+                        return
                     elif pipasks == "no" or pipasks == "No" or pipasks == "NO" or pipasks == "n" or pipasks == "N":
                         print()
                         print()
@@ -389,6 +908,7 @@ def checkmod():
                         print()
                         piprompt = 3
                         checkmod()
+                        return
             else:
                 print()
                 print("Unable to install modules")
@@ -410,6 +930,7 @@ def checkmod():
             time.sleep(0.5)
             print()
             checkmod()
+            return
     else:
         import pytz
         import ephem
@@ -426,6 +947,7 @@ def checkmod():
             from backports.zoneinfo import ZoneInfo
         delete(3)
         prompt1()
+        return
 
 def prompt1():
     global sfxsounds
@@ -470,6 +992,7 @@ def sound():
     global sfxsounds
     global soundchecks
     global oselected
+    import urllib.request
     sfxsounds = 1
     temp = 0
     file = "none"
@@ -483,11 +1006,21 @@ def sound():
         isExist = os.path.exists(path)
         if not isExist:
             os.makedirs(path)
-        if not os.path.exists(os.getcwd() + "/Music/Planets.wav") == True:
+        if not os.path.exists(os.getcwd() + r"/Music/Planets.wav") == True:
             print()
-            URL = "https://github.com/slyfalco/The-MoonHack-Project/raw/main/Music/Planets.wav"
+            URL = r"https://github.com/slyfalco/The-MoonHack-Project/raw/main/Music/Planets.wav"
             file = "Planets.wav"
-            wget.download(URL, os.getcwd() + "/Music/Planets.wav", bar=download_bar)
+            try:
+                urllib.request.urlopen(r'https://google.com')
+            except Exception:
+                print()
+                print("The internet is unavailable")
+                time.sleep(1)
+                delete(3)
+                print()
+                input("Press enter to quit ")
+                return
+            wget.download(URL, os.getcwd() + r"/Music/Planets.wav", bar=download_bar)
             print()
             print("Downloaded " + file)
             print()
@@ -496,10 +1029,20 @@ def sound():
         tempa2 = "/"
         for i in filestd:
             if not os.path.exists(os.getcwd() + "/Voice" + tempa2 + i + ".wav") == True:
+                try:
+                    urllib.request.urlopen(r'https://google.com')
+                except Exception:
+                    print()
+                    print("The internet is unavailable")
+                    time.sleep(1)
+                    delete(3)
+                    print()
+                    input("Press enter to quit ")
+                    return
                 print()
-                URL = ("https://github.com/slyfalco/The-MoonHack-Project/raw/main/Voice/" + i + ".wav")
+                URL = (r"https://github.com/slyfalco/The-MoonHack-Project/raw/main/Voice/" + i + ".wav")
                 file = (i + ".wav")
-                wget.download(URL, os.getcwd() + "/Voice" + tempa2 + i + ".wav", bar=download_bar)
+                wget.download(URL, os.getcwd() + r"/Voice" + tempa2 + i + ".wav", bar=download_bar)
                 print()
                 print("Downloaded " + file)
                 print()
@@ -511,8 +1054,6 @@ def sound():
         del file
         print()
         print("Unable to download Sound files")
-        time.sleep(0.5)
-        print("Try checking your internet connection")
         time.sleep(2)
         print()
         print("Continuing without sound")
@@ -520,10 +1061,11 @@ def sound():
         sfxsounds = 0
         temp = 2
         print()
+    del urllib
     try:
         if soundchecks == 1:
             print("Continuing at Selected Option")
-            winsound.PlaySound(os.getcwd() + "/Music/Planets.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
+            winsound.PlaySound(os.getcwd() + r"/Music/Planets.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
             time.sleep(1)
             if oselected == "twilight":
                 oselected = "twilight"
@@ -578,7 +1120,7 @@ def sound():
                 return
     except Exception:
         if temp == 1:
-            winsound.PlaySound(os.getcwd() + "/Music/Planets.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
+            winsound.PlaySound(os.getcwd() + r"/Music/Planets.wav", winsound.SND_LOOP + winsound.SND_ASYNC)
             menu()
             return
         elif temp == 2:
@@ -1235,7 +1777,7 @@ def menu():  # The main menu
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Sun.wav")
+                    playsound(os.getcwd() + r"/Voice/Sun.wav")
                     twilight()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1255,8 +1797,8 @@ def menu():  # The main menu
                 twilight()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
     elif select == "2" or select == "moon" or select == "Moon" or select == "MOON":
@@ -1268,7 +1810,7 @@ def menu():  # The main menu
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Moon.wav")
+                    playsound(os.getcwd() + r"/Voice/Moon.wav")
                     moon()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1283,13 +1825,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 moon()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1302,7 +1844,7 @@ def menu():  # The main menu
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Mercury.wav")
+                    playsound(os.getcwd() + r"/Voice/Mercury.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1317,13 +1859,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1336,7 +1878,7 @@ def menu():  # The main menu
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Venus.wav")
+                    playsound(os.getcwd() + r"/Voice/Venus.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1351,13 +1893,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1385,13 +1927,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1404,7 +1946,7 @@ def menu():  # The main menu
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Jupiter.wav")
+                    playsound(os.getcwd() + r"/Voice/Jupiter.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1419,13 +1961,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1438,7 +1980,7 @@ def menu():  # The main menu
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Saturn.wav")
+                    playsound(os.getcwd() + r"/Voice/Saturn.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1453,13 +1995,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1471,9 +2013,8 @@ def menu():  # The main menu
                 mode()
                 return
             elif sfxsounds == 1:
-                i = "/"
                 try:
-                    playsound(os.getcwd() + "/Voice" + i + "Uranus.wav")
+                    playsound(os.getcwd() + r"/Voice/Uranus.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1488,13 +2029,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1506,9 +2047,8 @@ def menu():  # The main menu
                 mode()
                 return
             elif sfxsounds == 1:
-                i = "/"
                 try:
-                    playsound(os.getcwd() + "/Voice" + i + "Neptune.wav")
+                    playsound(os.getcwd() + r"/Voice/Neptune.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1523,13 +2063,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1557,13 +2097,13 @@ def menu():  # The main menu
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
             if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1578,7 +2118,7 @@ def menu():  # The main menu
         if select == "11" or select == "disable sound" or select == "Disable sound" or select == "Disable Sound" or select == "DISABLE SOUND":
             print()
             winsound.PlaySound(None, winsound.SND_PURGE)
-            playsound(os.getcwd() + "/Voice/Disable.wav")
+            playsound(os.getcwd() + r"/Voice/Disable.wav")
             sfxsounds = 0
             tempa = 0
             menu()
@@ -1586,8 +2126,8 @@ def menu():  # The main menu
     elif sfxsounds == 2:
         if select == "11" or select == "error" or select == "Error" or select == "ERROR":
             winsound.PlaySound(None, winsound.SND_PURGE)
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             tempa = 0
             delete(2)
             return
@@ -1605,8 +2145,8 @@ def menu():  # The main menu
             delete(0)
             return
         else:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             print()
             print("INVALID RESPONSE")
             time.sleep(0.5)
@@ -1617,8 +2157,8 @@ def menu():  # The main menu
         print()
         print("INVALID RESPONSE")
         if sfxsounds == 1:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
         else:
@@ -1657,7 +2197,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/None.wav")
+                    playsound(os.getcwd() + r"/Voice/None.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1672,13 +2212,13 @@ def twilight():  # Twilight select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1690,7 +2230,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Civil.wav")
+                    playsound(os.getcwd() + r"/Voice/Civil.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1705,13 +2245,13 @@ def twilight():  # Twilight select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1723,7 +2263,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Nautical.wav")
+                    playsound(os.getcwd() + r"/Voice/Nautical.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1738,13 +2278,13 @@ def twilight():  # Twilight select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1756,7 +2296,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Astronomical.wav")
+                    playsound(os.getcwd() + r"/Voice/Astronomical.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1771,13 +2311,13 @@ def twilight():  # Twilight select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1789,7 +2329,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/All.wav")
+                    playsound(os.getcwd() + r"/Voice/All.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1804,13 +2344,13 @@ def twilight():  # Twilight select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1822,7 +2362,7 @@ def twilight():  # Twilight select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    playsound(os.getcwd() + r"/Voice/Back.wav")
                     delete(0)
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1837,13 +2377,13 @@ def twilight():  # Twilight select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 delete(0)
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1851,8 +2391,8 @@ def twilight():  # Twilight select
         print()
         print("INVALID RESPONSE")
         if sfxsounds == 1:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
         else:
@@ -1892,7 +2432,7 @@ def moon():  # moon mode select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Normal.wav")
+                    playsound(os.getcwd() + r"/Voice/Normal.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1907,13 +2447,13 @@ def moon():  # moon mode select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1940,13 +2480,13 @@ def moon():  # moon mode select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1958,7 +2498,7 @@ def moon():  # moon mode select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Both.wav")
+                    playsound(os.getcwd() + r"/Voice/Both.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -1973,13 +2513,13 @@ def moon():  # moon mode select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -1991,7 +2531,7 @@ def moon():  # moon mode select
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    playsound(os.getcwd() + r"/Voice/Back.wav")
                     delete(0)
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2006,13 +2546,13 @@ def moon():  # moon mode select
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 delete(0)
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2020,8 +2560,8 @@ def moon():  # moon mode select
         print()
         print("INVALID RESPONSE")
         if sfxsounds == 1:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
         else:
@@ -2061,7 +2601,7 @@ def phases():  # moon phases
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/First quarter moon.wav")
+                    playsound(os.getcwd() + r"/Voice/First quarter moon.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2076,13 +2616,13 @@ def phases():  # moon phases
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2109,13 +2649,13 @@ def phases():  # moon phases
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2127,7 +2667,7 @@ def phases():  # moon phases
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Full moon.wav")
+                    playsound(os.getcwd() + r"/Voice/Full moon.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2142,13 +2682,13 @@ def phases():  # moon phases
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2160,7 +2700,7 @@ def phases():  # moon phases
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/New moon.wav")
+                    playsound(os.getcwd() + r"/Voice/New moon.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2175,13 +2715,13 @@ def phases():  # moon phases
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2193,7 +2733,7 @@ def phases():  # moon phases
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/All.wav")
+                    playsound(os.getcwd() + r"/Voice/All.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2208,13 +2748,13 @@ def phases():  # moon phases
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2226,7 +2766,7 @@ def phases():  # moon phases
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    playsound(os.getcwd() + r"/Voice/Back.wav")
                     moon()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2241,13 +2781,13 @@ def phases():  # moon phases
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 moon()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2255,8 +2795,8 @@ def phases():  # moon phases
         print()
         print("INVALID RESPONSE")
         if sfxsounds == 1:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
         else:
@@ -2305,7 +2845,7 @@ def mode():  # pick an option for how to find location
         try:
             if sfxsounds == 1 and mcheck == 0:
                 try:
-                    playsound(os.getcwd() + "/Voice/Manual.wav")
+                    playsound(os.getcwd() + r"/Voice/Manual.wav")
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
                     print()
@@ -2318,11 +2858,11 @@ def mode():  # pick an option for how to find location
                     sound()
                     return
             elif sfxsounds == 2 and mcheck == 0:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         print()
@@ -2333,8 +2873,8 @@ def mode():  # pick an option for how to find location
             print()
             print("INVALID RESPONSE")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2348,8 +2888,8 @@ def mode():  # pick an option for how to find location
             print()
             print("INVALID NUMBER")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2362,8 +2902,8 @@ def mode():  # pick an option for how to find location
             pass
             print()
             print("INVALID RESPONSE")
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
             mode()
@@ -2375,8 +2915,8 @@ def mode():  # pick an option for how to find location
             print()
             print("INVALID NUMBER")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2390,8 +2930,8 @@ def mode():  # pick an option for how to find location
             print()
             print("INVALID RESPONSE")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2404,8 +2944,8 @@ def mode():  # pick an option for how to find location
             print()
             print("INVALID NUMBER")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2422,8 +2962,8 @@ def mode():  # pick an option for how to find location
             print()
             print("INVALID RESPONSE")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2447,11 +2987,11 @@ def mode():  # pick an option for how to find location
                     sound()
                     return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         try:
@@ -2519,7 +3059,7 @@ def mode():  # pick an option for how to find location
                     return
                 elif sfxsounds == 1:
                     try:
-                        playsound(os.getcwd() + "/Voice/Back.wav")
+                        playsound(os.getcwd() + r"/Voice/Back.wav")
                         twilight()
                     except Exception:
                         winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2534,13 +3074,13 @@ def mode():  # pick an option for how to find location
                         return
                     return
                 elif sfxsounds == 2:
-                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + r"/Voice/ERROR.wav")
                     twilight()
                     return
             except Exception:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 delete(2)
                 return
             return
@@ -2552,7 +3092,7 @@ def mode():  # pick an option for how to find location
                         return
                     elif sfxsounds == 1:
                         try:
-                            playsound(os.getcwd() + "/Voice/Back.wav")
+                            playsound(os.getcwd() + r"/Voice/Back.wav")
                             moon()
                         except Exception:
                             winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2567,13 +3107,13 @@ def mode():  # pick an option for how to find location
                             return
                         return
                     elif sfxsounds == 2:
-                        if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                            playsound(os.getcwd() + "/Voice/ERROR.wav")
+                        if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                            playsound(os.getcwd() + r"/Voice/ERROR.wav")
                         moon()
                         return
                 except Exception:
-                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + r"/Voice/ERROR.wav")
                     delete(2)
                     return
                 return
@@ -2584,7 +3124,7 @@ def mode():  # pick an option for how to find location
                         return
                     elif sfxsounds == 1:
                         try:
-                            playsound(os.getcwd() + "/Voice/Back.wav")
+                            playsound(os.getcwd() + r"/Voice/Back.wav")
                             phases()
                         except Exception:
                             winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2599,13 +3139,13 @@ def mode():  # pick an option for how to find location
                             return
                         return
                     elif sfxsounds == 2:
-                        if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                            playsound(os.getcwd() + "/Voice/ERROR.wav")
+                        if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                            playsound(os.getcwd() + r"/Voice/ERROR.wav")
                         phases()
                         return
                 except Exception:
-                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + r"/Voice/ERROR.wav")
                     delete(2)
                     return
                 return
@@ -2622,7 +3162,7 @@ def mode():  # pick an option for how to find location
                     return
                 elif sfxsounds == 1:
                     try:
-                        playsound(os.getcwd() + "/Voice/Back.wav")
+                        playsound(os.getcwd() + r"/Voice/Back.wav")
                         menu()
                     except Exception:
                         winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2637,13 +3177,13 @@ def mode():  # pick an option for how to find location
                         return
                     return
                 elif sfxsounds == 2:
-                    if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                        playsound(os.getcwd() + "/Voice/ERROR.wav")
+                    if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                        playsound(os.getcwd() + r"/Voice/ERROR.wav")
                     menu()
                     return
             except Exception:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 delete(2)
                 return
             return
@@ -2652,8 +3192,8 @@ def mode():  # pick an option for how to find location
         print()
         print("INVALID RESPONSE")
         if sfxsounds == 1:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
         else:
@@ -2698,7 +3238,7 @@ def date():  # imput your own date or do it automaticly
         try:
             if sfxsounds == 1 and mcheck == 0:
                 try:
-                    playsound(os.getcwd() + "/Voice/Manual.wav")
+                    playsound(os.getcwd() + r"/Voice/Manual.wav")
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
                     print()
@@ -2711,11 +3251,11 @@ def date():  # imput your own date or do it automaticly
                     sound()
                     return
             elif sfxsounds == 2 and mcheck == 0:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         print()
@@ -2726,8 +3266,8 @@ def date():  # imput your own date or do it automaticly
             print()
             print("INVALID RESPONSE")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2741,8 +3281,8 @@ def date():  # imput your own date or do it automaticly
             print()
             print("INVALID YEAR")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2756,8 +3296,8 @@ def date():  # imput your own date or do it automaticly
             print()
             print("INVALID RESPONSE")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2771,8 +3311,8 @@ def date():  # imput your own date or do it automaticly
             print()
             print("INVALID MONTH")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2786,8 +3326,8 @@ def date():  # imput your own date or do it automaticly
             print()
             print("INVALID RESPONSE")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2850,8 +3390,8 @@ def date():  # imput your own date or do it automaticly
         else:
             print("INVALID DAY")
             if sfxsounds == 1:
-                if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                    playsound(os.getcwd() + "/Voice/INVALID.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/INVALID.wav")
                 else:
                     time.sleep(0.5)
             else:
@@ -2878,11 +3418,11 @@ def date():  # imput your own date or do it automaticly
                     sound()
                     return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         mytime = datetime.now()
@@ -2896,7 +3436,7 @@ def date():  # imput your own date or do it automaticly
                 return
             elif sfxsounds == 1:
                 try:
-                    playsound(os.getcwd() + "/Voice/Back.wav")
+                    playsound(os.getcwd() + r"/Voice/Back.wav")
                     mode()
                 except Exception:
                     winsound.PlaySound(None, winsound.SND_PURGE)
@@ -2911,13 +3451,13 @@ def date():  # imput your own date or do it automaticly
                     return
                 return
             elif sfxsounds == 2:
-                if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                    playsound(os.getcwd() + "/Voice/ERROR.wav")
+                if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                    playsound(os.getcwd() + r"/Voice/ERROR.wav")
                 mode()
                 return
         except Exception:
-            if os.path.exists(os.getcwd() + "/Voice/ERROR.wav") == True:
-                playsound(os.getcwd() + "/Voice/ERROR.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/ERROR.wav") == True:
+                playsound(os.getcwd() + r"/Voice/ERROR.wav")
             delete(2)
             return
         return
@@ -2925,8 +3465,8 @@ def date():  # imput your own date or do it automaticly
         print()
         print("INVALID RESPONSE")
         if sfxsounds == 1:
-            if os.path.exists(os.getcwd() + "/Voice/INVALID.wav") == True:
-                playsound(os.getcwd() + "/Voice/INVALID.wav")
+            if os.path.exists(os.getcwd() + r"/Voice/INVALID.wav") == True:
+                playsound(os.getcwd() + r"/Voice/INVALID.wav")
             else:
                 time.sleep(0.5)
         else:
@@ -2960,7 +3500,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -2984,7 +3524,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -3008,7 +3548,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -3032,7 +3572,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -3065,7 +3605,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -3094,7 +3634,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -3116,7 +3656,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -3137,7 +3677,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -3158,7 +3698,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -3179,7 +3719,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -3204,7 +3744,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                     f.close()
                     time.sleep(0.2)
                     print()
-                    print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                    print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                     time.sleep(0.7)
                     print()
                     input("Press enter ")
@@ -3238,7 +3778,7 @@ def calc():  # Runs all the calculations and has the option to save to file
                 f.close()
                 time.sleep(0.2)
                 print()
-                print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+                print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
                 time.sleep(0.7)
                 print()
                 input("Press enter ")
@@ -3267,7 +3807,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3289,7 +3829,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3311,7 +3851,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3333,7 +3873,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3355,7 +3895,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3377,7 +3917,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3398,7 +3938,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3479,7 +4019,7 @@ def calc():  # Runs all the calculations and has the option to save to file
             f.close()
             time.sleep(0.2)
             print()
-            print('File Saved to: ' + os.getcwd() + "\Planet Output File.txt")
+            print('File Saved to: ' + os.getcwd() + r"\Planet Output File.txt")
             time.sleep(0.7)
             print()
             input("Press enter ")
@@ -3494,12 +4034,8 @@ def calc():  # Runs all the calculations and has the option to save to file
         time.sleep(0.5)
         delete(1)
         return
-try:
-    checkmod()
-except Exception:
-    print()
-    print("AN ERROR HAS OCCURRED")
-    print("IT MAY HAVE BEEN CAUSED BY ADMIN RESTRICTIONS")
-    print()
-    input("Press enter to quit ")
+
+hupdater()
+
+
 
