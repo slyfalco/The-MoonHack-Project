@@ -165,8 +165,8 @@ def hupdater():
                             print("Continuing without the update")
                             time.sleep(1)
                             print()
-                            #delete(3)
-                            #checkmod()
+                            delete(3)
+                            checkmod()
                             return
                         elif wpt == "no" or wpt == "No" or wpt == "NO" or wpt == "n" or wpt == "N":
                             print()
